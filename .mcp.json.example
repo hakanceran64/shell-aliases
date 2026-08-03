@@ -1,0 +1,21 @@
+{
+  "_comment": "Bu dosyayı projeye .mcp.json olarak kopyalayın ve gerekmeyen server'ları silin. settings.json'da enableAllProjectMcpServers=true ile otomatik etkin olur. Sürümler reproducibility için sabitlenmiştir; güncellemeden önce changelog'a bakın. Kaynak: everything-claude-code (public, token gerektirmeyen server'lar).",
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@2.1.4"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking@2025.12.18"]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory@2026.1.26"]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@0.0.69", "--extension"]
+    }
+  }
+}

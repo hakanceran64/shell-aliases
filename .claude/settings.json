@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "Bash(ls:*)",
+      "Bash(rg:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(tree:*)",
+      "Bash(stat:*)",
+      "Bash(file:*)",
+      "Bash(diff:*)",
+      "Bash(which:*)",
+      "Bash(date:*)",
+      "Bash(echo:*)",
+      "Bash(pwd:*)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(chmod:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)",
+      "Bash(git ls-files:*)",
+      "Bash(git blame:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git stash:*)",
+      "Bash(git tag:*)",
+      "Bash(git fetch:*)",
+      "Bash(git push:*)",
+      "Bash(bash .claude/hooks/*)",
+      "Bash(.claude/hooks/*/*.sh)",
+      "Bash(.claude/skills/*/*.py)",
+      "Bash(.claude/scripts/*)",
+      "WebFetch(domain:docs.claude.com)",
+      "WebFetch(domain:github.com)"
+    ],
+    "ask": [
+      "Bash(git pull:*)",
+      "Bash(git checkout:*)",
+      "Bash(git switch:*)",
+      "Bash(git merge:*)",
+      "Bash(git rebase:*)",
+      "Bash(git cherry-pick:*)",
+      "Bash(gh:*)",
+      "Bash(npm install:*)",
+      "Bash(npm i:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pip install:*)",
+      "Bash(brew install:*)",
+      "Bash(rm:*)",
+      "Bash(rmdir:*)",
+      "Bash(git rm:*)",
+      "Bash(mv:*)",
+      "Bash(ln:*)"
+    ],
+    "deny": [
+      "Bash(rm -rf /:*)",
+      "Bash(rm -rf /*:*)",
+      "Bash(rm -rf ~:*)",
+      "Bash(rm -rf $HOME:*)",
+      "Bash(sudo rm:*)",
+      "Bash(sudo:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git push origin --force:*)",
+      "Bash(git push origin -f:*)",
+      "Bash(git reset --hard origin:*)",
+      "Bash(git filter-repo:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(dd if=:*)",
+      "Bash(mkfs:*)",
+      "Bash(curl * | sh:*)",
+      "Bash(curl * | bash:*)",
+      "Bash(wget * | sh:*)",
+      "Bash(wget * | bash:*)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/id_rsa*)",
+      "Read(**/*.pem)",
+      "Read(**/credentials*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/session-start/show-context.sh", "timeout": 10 }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/user-prompt-submit/inject-context.sh", "timeout": 10 }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/pre-tool-use/bash-guard.sh", "timeout": 5 }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/post-tool-use/claude-config-watcher.sh", "timeout": 10 }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/stop/wrap-up.sh", "timeout": 10, "async": true }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "LANG": "tr_TR.UTF-8"
+  },
+  "enableAllProjectMcpServers": true
+}

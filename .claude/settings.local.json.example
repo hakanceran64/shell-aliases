@@ -1,0 +1,8 @@
+{
+  "_comment": "Bu dosyayı .claude/settings.local.json olarak KOPYALAYIN. Makineye özeldir, .gitignore'a eklenmelidir; kit'e dahil edilmez.",
+  "model": "sonnet",
+  "permissions": {
+    "allow": []
+  },
+  "env": {}
+}

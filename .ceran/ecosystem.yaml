@@ -1,0 +1,13 @@
+# Bu projenin ekosistemden tükettikleri.
+# Beyandır — gerçekte ne kurulu olduğunu .ceran/lock.yaml söyler.
+# Uygula: dev eco sync   ·   Doğrula: dev eco sync --check
+project:
+  name: shell-aliases
+  profiles: [docs-only]
+
+consume:
+  ai-foundation:
+    mode: vendor
+    version: v1.0.0
+  wiki:
+    mode: link
