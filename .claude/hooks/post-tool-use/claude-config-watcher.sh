@@ -43,9 +43,16 @@ case "$FILE_PATH" in
   *) exit 0 ;;
 esac
 
-# Gürültü dosyalarını atla (yerel ayar, changelog'un kendisi, üretilen lock)
+# Gürültü dosyalarını atla.
+#   - settings.local.json: makineye özel, kit'e girmez
+#   - CHANGELOG.md: bu hook'un kendi çıktısı (yoksa sonsuz döngü)
+#   - .ceran/lock.yaml: üretilen
+#   - .claude/projects/**, .claude/plans/**, .claude/todos/**, .claude/shell-snapshots/**:
+#     Claude Code'un KENDİ oturum state'i (memory, plan, todo, snapshot). Kit curation'ı
+#     ilgilendirmez; sinyal üretirse kuyruk okunmaz hale gelir.
 case "$REL" in
   .claude/settings.local.json|*CHANGELOG.md|.ceran/lock.yaml) exit 0 ;;
+  .claude/projects/*|.claude/plans/*|.claude/todos/*|.claude/shell-snapshots/*|.claude/statsig/*) exit 0 ;;
 esac
 
 # Üretilen tasarım çıktısına elle dokunulmuş: bu bir HATA, sinyal değil.
