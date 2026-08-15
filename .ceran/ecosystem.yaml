@@ -8,6 +8,6 @@ project:
 consume:
   ai-foundation:
     mode: vendor
-    version: v1.0.0
+    version: v1.1.0
   wiki:
     mode: link
