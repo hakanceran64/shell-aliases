@@ -12,6 +12,15 @@
 | `ask` | her seferinde onay sorulur | `git pull`, `gh`, paket kurulumu, `rm`, `mv` |
 | `deny` | hiçbir koşulda çalışmaz | `rm -rf /`, force push, `curl\|sh`, `.env`/secret okuma |
 
+## `deny` bir tabandır
+
+Kit'in `deny` listesi **asgari**dir: proje genişletebilir, **daraltamaz**. Bir projenin kendi
+izin matrisini sahiplenmesi (`.ceran/ecosystem.yaml` → `local: [settings.json]`) yalnız
+`allow`/`ask` için geçerlidir; `deny` girdilerini düşürmek 02-guvenlik'i delmek demektir.
+
+`local` beyanı sync'i durdurduğu için bu taban otomatik gelmez — yeni bir kit `deny` girdisi
+eklendiğinde sahiplenen projelere elle taşınır.
+
 ## İlkeler
 
 - **En az ayrıcalık:** yeni bir komut gerekiyorsa önce `ask` ile başla; güvenli ve sık ise `allow`'a taşı.

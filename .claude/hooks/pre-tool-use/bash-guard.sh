@@ -27,6 +27,10 @@ declare -a BLOCKLIST=(
   'git[[:space:]]+push[^|;&]*[[:space:]]\+[^[:space:]]'
   'git[[:space:]]+reset[[:space:]]+--hard[[:space:]]+origin'
   'git[[:space:]]+filter-(repo|branch)'
+  # Node'dan yükseltildi (governance loop): ikisi de izlenmeyen/submodule içeriğini
+  # geri dönüşsüz siler. `-fd`/`-df` sırası fark etmesin diye iki yönlü yazıldı.
+  'git[[:space:]]+clean[^|;&]*[[:space:]]-[a-zA-Z]*(fd|df)[a-zA-Z]*([[:space:]]|$)'
+  'git[[:space:]]+submodule[[:space:]]+deinit[^|;&]*[[:space:]]-[a-zA-Z]*f'
   'curl[[:space:]]+.*\|[[:space:]]*(sh|bash|zsh)'
   'wget[[:space:]]+.*\|[[:space:]]*(sh|bash|zsh)'
   '(^|[;&|])[[:space:]]*dd[[:space:]]+if='
