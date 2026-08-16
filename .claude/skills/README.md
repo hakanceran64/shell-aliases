@@ -36,32 +36,22 @@ Yalnız `description` önerilir. Detay: `_TEMPLATE.md` ve [Claude Docs — skill
 | [`mermaid-check`](mermaid-check/SKILL.md) | `/mermaid-check` | her ikisi | mermaid diyagram doğrulama |
 | [`_TEMPLATE.md`](_TEMPLATE.md) | — | — | yeni skill iskeleti (skill değil, kopyalanır) |
 
-### UI craft (web arayüzü · design engineering)
+### UI craft → artık `profiles/web-ui/` altında
 
-Kaynak: [emilkowalski/skills](https://github.com/emilkowalski/skills) (MIT), ekosisteme uyarlandı.
-Provenance, eşleme tablosu ve re-sync: `claude-foundation/docs/UPSTREAM-SKILLS.md`.
+10 UI craft skill'i (`ui-craft`·`animate`·`review-animations`·`improve-animations`·
+`find-animation-opportunities`·`animation-vocabulary`·`apple-design`·`pick-ui-library`·
+`ui-prototype`·`sonner`) çekirdek kitten **paylaşılan `web-ui` overlay'ine** taşındı
+(`claude-foundation/profiles/web-ui/`, DECISIONS#0022). Bunlar yalnız web stack'i beyan eden
+projelere iner — `astro-web`, `react`, `node-web` profilleri `.includes` ile `web-ui`'yi çeker.
 
-| Skill | Komut | İnvocation | Görev |
-|-------|-------|------------|-------|
-| [`ui-craft`](ui-craft/SKILL.md) | `/ui-craft` | her ikisi | ana referans: karar çerçevesi + cila kalıpları (+`PATTERNS.md`) |
-| [`animate`](animate/SKILL.md) | `/animate` | her ikisi | animasyonu sıfırdan kurar ve yazar (+`RECIPES.md`) |
-| [`review-animations`](review-animations/SKILL.md) | `/review-animations` | yalnız kullanıcı | diff/bileşen motion review'ü (+`STANDARDS.md`) |
-| [`improve-animations`](improve-animations/SKILL.md) | `/improve-animations` | yalnız kullanıcı | kod tabanı denetimi → `docs/plans/` (+`AUDIT.md`, `PLAN-TEMPLATE.md`) |
-| [`find-animation-opportunities`](find-animation-opportunities/SKILL.md) | `/find-animation-opportunities` | her ikisi | animate etmeyen ama etmesi gereken yerler (+reddedilenler) |
-| [`animation-vocabulary`](animation-vocabulary/SKILL.md) | `/animation-vocabulary` | her ikisi | efekt tarifi → doğru terim (ters sözlük) |
-| [`apple-design`](apple-design/SKILL.md) | `/apple-design` | her ikisi | akışkan arayüz: spring, jest, materyal, tipografi |
-| [`pick-ui-library`](pick-ui-library/SKILL.md) | `/pick-ui-library` | yalnız kullanıcı | kütüphane seçimi (önce ekosistem kataloğu) |
-| [`ui-prototype`](ui-prototype/SKILL.md) | `/ui-prototype` | yalnız kullanıcı | N varyant + görsel seçici (+`PICKER.md`) |
-| [`sonner`](sonner/SKILL.md) | `/sonner` | her ikisi | Sonner toast rehberi ve sorun giderme (+`API.md`) |
+Sebebi: web arayüzü olmayan projelerin (C++/ROS2, Python, docs-only) `.claude/skills/` dizini
+kullanılmayan 10 skill taşıyordu; `description` daraltması onları tetiklenmez kılıyordu ama
+listeden ve bakım yükünden çıkarmıyordu. Katalog: [`profiles/web-ui/README.md`](../../../profiles/web-ui/README.md).
 
 > Yan etkili akışlar (`commit-push-pr`, `audit`, `review-animations`, `improve-animations`,
 > `ui-prototype`, `pick-ui-library`) `disable-model-invocation: true` ile yalnız kullanıcı
 > tarafından tetiklenir — Claude bunları kendi başına çalıştırmaz.
 > Proje-özel skill'ler (ör. `flutter-feature`) profil paketleriyle eklenir.
 
-**UI craft skill'leri profil-bağımsız çekirdekte durur** (kararlar: `docs/DECISIONS.md` #0021):
-`description` alanları web arayüzüne dar biçimde kapsanmıştır, bu yüzden C++/ROS2, Python ya da
-docs-only bir projede kendiliğinden tetiklenmezler; ama `/komut` ile her projeden erişilebilirler.
-Değerlerin (easing eğrileri, süre bütçeleri) kanonik kopyası `ui-craft/PATTERNS.md` +
-`animate/SKILL.md`'dedir; `review-animations/STANDARDS.md` ve `improve-animations/AUDIT.md` aynı
-tabloları review/denetim çerçevesiyle yineler — birini değiştirirken diğerlerini de güncelle.
+Web projesi olmayan bir repoda bu skill'ler artık **hiç kurulmaz**; gerekiyorsa projenin
+`.ceran/ecosystem.yaml` dosyasına ilgili web profili eklenir.
