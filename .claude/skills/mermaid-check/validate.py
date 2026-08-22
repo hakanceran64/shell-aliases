@@ -11,6 +11,7 @@ Exit code:
     1  en az bir hata
     2  kullanım hatası
 """
+
 from __future__ import annotations
 
 import argparse
@@ -25,16 +26,46 @@ CODE_FENCE = re.compile(r"^```(\S*)\s*$")
 # Kenar (edge) sözdizimi OLMAYAN tipler: hiyerarşi girintiden, satırlar serbest metindir.
 # Buralarda `→` bir kenar değil, düğüm/etiket metnidir — flag'lemek yanlış pozitiftir.
 NO_EDGE_DIAGRAMS = {
-    "mindmap", "timeline", "journey", "pie", "gantt", "quadrantChart",
-    "xychart-beta", "sankey-beta", "packet-beta", "radar-beta", "kanban",
+    "mindmap",
+    "timeline",
+    "journey",
+    "pie",
+    "gantt",
+    "quadrantChart",
+    "xychart-beta",
+    "sankey-beta",
+    "packet-beta",
+    "radar-beta",
+    "kanban",
 }
 
 VALID_DIAGRAM_TYPES = {
-    "flowchart", "graph", "sequenceDiagram", "classDiagram", "stateDiagram",
-    "stateDiagram-v2", "erDiagram", "journey", "gantt", "pie", "gitGraph",
-    "mindmap", "timeline", "quadrantChart", "requirementDiagram", "C4Context",
-    "C4Container", "C4Component", "C4Dynamic", "sankey-beta", "xychart-beta",
-    "block-beta", "packet-beta", "architecture-beta", "kanban", "radar-beta",
+    "flowchart",
+    "graph",
+    "sequenceDiagram",
+    "classDiagram",
+    "stateDiagram",
+    "stateDiagram-v2",
+    "erDiagram",
+    "journey",
+    "gantt",
+    "pie",
+    "gitGraph",
+    "mindmap",
+    "timeline",
+    "quadrantChart",
+    "requirementDiagram",
+    "C4Context",
+    "C4Container",
+    "C4Component",
+    "C4Dynamic",
+    "sankey-beta",
+    "xychart-beta",
+    "block-beta",
+    "packet-beta",
+    "architecture-beta",
+    "kanban",
+    "radar-beta",
 }
 
 
@@ -107,7 +138,7 @@ def validate_block(content: str) -> list[tuple[str, str, str]]:
     # Unicode arrow (sequenceDiagram'da participant message metni içinde olabilir; label içinde quote'lu varsa skip)
     in_note = False
     if diag_word_clean in NO_EDGE_DIAGRAMS:
-        lines = []                       # kenarı olmayan diyagramda ok karakteri aranmaz
+        lines = []  # kenarı olmayan diyagramda ok karakteri aranmaz
     for i, ln in enumerate(lines, 1):
         # Çok satırlı not gövdesi: `note right of X` ... `end note` arası serbest metindir.
         bare = ln.strip()
@@ -122,11 +153,13 @@ def validate_block(content: str) -> list[tuple[str, str, str]]:
         # (`A->>B: ... → ...`) veya not gövdesinde zararsızdır — orada flag'lemek yanlış
         # pozitif üretir ve dokümanı kurala uydurmak için anlamsızca değiştirtir.
         if not in_note and ("→" in ln or "←" in ln or "⇒" in ln):
-            stripped = re.sub(r'"[^"]*"', '', ln)          # quote'lu metin
-            stripped = re.sub(r'\[[^\[\]]*\]', '', stripped)  # köşeli parantezli etiket
-            stripped = stripped.split(":", 1)[0]           # `:` sonrası etiket metnidir
+            stripped = re.sub(r'"[^"]*"', "", ln)  # quote'lu metin
+            stripped = re.sub(r"\[[^\[\]]*\]", "", stripped)  # köşeli parantezli etiket
+            stripped = stripped.split(":", 1)[0]  # `:` sonrası etiket metnidir
             if "→" in stripped or "←" in stripped or "⇒" in stripped:
-                issues.append(("unicode-arrow", "ASCII '-->' kullan veya quote içine al", ln))
+                issues.append(
+                    ("unicode-arrow", "ASCII '-->' kullan veya quote içine al", ln)
+                )
 
     # subgraph / end dengesi (sequenceDiagram alt/loop/par/critical/rect blokları end ile kapanır)
     diag_type = diag_word_clean
@@ -134,9 +167,7 @@ def validate_block(content: str) -> list[tuple[str, str, str]]:
         sg = sum(1 for ln in lines if re.match(r"^\s*subgraph\b", ln))
         en = sum(1 for ln in lines if re.match(r"^\s*end\s*$", ln))
         if sg != en:
-            issues.append(
-                ("subgraph-end", f"subgraph={sg}, end={en} dengesiz", "")
-            )
+            issues.append(("subgraph-end", f"subgraph={sg}, end={en} dengesiz", ""))
 
     # Quote'suz parantez içinde etiket: A[label (1)]  veya  A[label "x"]
     pattern_paren = re.compile(r"\[(?:[^\"\[\]]*\([^)]*\)[^\"\[\]]*)\]")
@@ -147,12 +178,16 @@ def validate_block(content: str) -> list[tuple[str, str, str]]:
         #   [/.../]   → parallelogram
         #   ((...))   → stadium / circle
         cleaned = re.sub(r'"[^"]*"', '""', ln)
-        cleaned = re.sub(r'\[\([^)]*\)\]', '[CYL]', cleaned)
-        cleaned = re.sub(r'\(\([^)]*\)\)', '((STD))', cleaned)
-        cleaned = re.sub(r'\{\{[^}]*\}\}', '{{HEX}}', cleaned)
+        cleaned = re.sub(r"\[\([^)]*\)\]", "[CYL]", cleaned)
+        cleaned = re.sub(r"\(\([^)]*\)\)", "((STD))", cleaned)
+        cleaned = re.sub(r"\{\{[^}]*\}\}", "{{HEX}}", cleaned)
         if pattern_paren.search(cleaned):
             issues.append(
-                ("unquoted-paren", 'parantez içeren etiket quote\'lu olmalı: A["label (1)"]', ln.strip())
+                (
+                    "unquoted-paren",
+                    'parantez içeren etiket quote\'lu olmalı: A["label (1)"]',
+                    ln.strip(),
+                )
             )
 
     # Türkçe karakter + label içinde quote'suz: A[İşlem]
@@ -169,7 +204,11 @@ def validate_block(content: str) -> list[tuple[str, str, str]]:
     for ln in lines:
         if re.search(r"\[[^\"\[\]]*\\n[^\"\[\]]*\]", ln):
             issues.append(
-                ("unquoted-newline", "satır içi label'da \\n için <br/> + quote kullan", ln.strip())
+                (
+                    "unquoted-newline",
+                    "satır içi label'da \\n için <br/> + quote kullan",
+                    ln.strip(),
+                )
             )
 
     # Self-referencing classDef olmadan ::: kullanımı (ham heuristic)
@@ -183,9 +222,7 @@ def validate_block(content: str) -> list[tuple[str, str, str]]:
             defined_classes.add(m.group(1))
     undefined = used_classes - defined_classes
     if undefined:
-        issues.append(
-            ("missing-classdef", f"tanımsız class: {sorted(undefined)}", "")
-        )
+        issues.append(("missing-classdef", f"tanımsız class: {sorted(undefined)}", ""))
 
     return issues
 
@@ -214,14 +251,28 @@ def find_md_files(root: Path, exclude: list[str] | None = None) -> list[Path]:
     """Workspace'teki .md dosyaları. `exclude`: köke göreli yol öneki veya dizin adı
     (ör. vendor'lanmış/salt-okunur ağaçlar — bizim düzeltemeyeceğimiz içerik)."""
     out: list[Path] = []
-    skip = {"node_modules", ".git", "__pycache__", "temp", ".cache",
-            "_deps", "build", "dist", "target", "Clippings", ".obsidian"}
+    skip = {
+        "node_modules",
+        ".git",
+        "__pycache__",
+        "temp",
+        ".cache",
+        "_deps",
+        "build",
+        "dist",
+        "target",
+        "Clippings",
+        ".obsidian",
+    }
     extra = [e.strip("/") for e in (exclude or []) if e.strip("/")]
     for p in root.rglob("*.md"):
         if any(part in skip for part in p.parts):
             continue
         rel = p.relative_to(root).as_posix()
-        if any(rel == e or rel.startswith(e + "/") or e in p.relative_to(root).parts for e in extra):
+        if any(
+            rel == e or rel.startswith(e + "/") or e in p.relative_to(root).parts
+            for e in extra
+        ):
             continue
         out.append(p)
     return out
@@ -233,8 +284,12 @@ def main() -> int:
     ap.add_argument("--workspace", action="store_true", help="Tüm workspace'i tara")
     ap.add_argument("--stdin", action="store_true", help="stdin'den oku")
     ap.add_argument("--root", default=".", help="Workspace kökü")
-    ap.add_argument("--exclude", action="append", default=[],
-                    help="Taramadan çıkarılacak yol/dizin (tekrarlanabilir; ör. --exclude wiki)")
+    ap.add_argument(
+        "--exclude",
+        action="append",
+        default=[],
+        help="Taramadan çıkarılacak yol/dizin (tekrarlanabilir; ör. --exclude wiki)",
+    )
     args = ap.parse_args()
 
     issues: list[Issue] = []
@@ -255,7 +310,7 @@ def main() -> int:
         return 0
 
     for i in issues:
-        snip = f" — \"{i.snippet}\"" if i.snippet else ""
+        snip = f' — "{i.snippet}"' if i.snippet else ""
         print(f"[mermaid-check] {i.file}:{i.line} ✗ [{i.rule}] {i.msg}{snip}")
     print(f"[mermaid-check] özet: {len(issues)} hata")
     return 1
