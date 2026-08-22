@@ -30,7 +30,10 @@ Her eksen `✅ / ⚠️ / ❌` puanlanır; her bulguya `dosya:satır` kanıtı.
 - `rules/` çekirdek set tam mı, `settings.json` geçerli mi?
 - `skills/agents/hooks` çalışır ve tutarlı mı (format, isim)?
 - `.claude/CHANGELOG.md` ile gerçek durum arasında drift?
-- `claude-foundation` ile senkron mu (governance)?
+- `claude-foundation` ile senkron mu (`scripts/new-project.sh <proje> --check`)?
+- Kalite kapısı gerçekten kapı mı: `.claude/quality.json` komutları güncel mi, CI `verify.sh --strict`
+  çağırıyor mu, lint adımı `continue-on-error` ile tavsiyeye düşürülmüş mü?
+- Vendored ağaçlar bayat mı (foundation: `scripts/sync-wiki.sh --check`, `sync-upstream-skills.sh --diff`)?
 
 ## 7. Bağımlılık & Borç
 - TODO/FIXME/HACK yoğunluğu ve yaşı
@@ -38,6 +41,10 @@ Her eksen `✅ / ⚠️ / ❌` puanlanır; her bulguya `dosya:satır` kanıtı.
 - Ölü kod / kullanılmayan dosyalar
 
 ## 8. Git Hijyeni
+- **ÖNCE: çalışma kopyası taze mi?** `git fetch --all` sonrası `HEAD..origin/<branch>` boş mu?
+  Geride bir klonu denetlemek **bayat bulgu üretir** — rapor yazmadan önce doğrula, geriyse
+  denetimi durdur ve operatöre bildir (kullanıcı birden çok cihazda çalışıyor olabilir).
+  Aynı kontrolü her remote için yap: `origin` ile `gitlab` ayrışmış olabilir.
 - Commit konvansiyonu (Conventional Commits, atfsız) uygulanıyor mu?
 - Branch durumu, commit edilmemiş yığılma, büyük binary'ler
 - `.gitignore` kapsamı (build çıktısı, secret, `settings.local.json`)

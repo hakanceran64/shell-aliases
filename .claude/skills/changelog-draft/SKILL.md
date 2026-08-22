@@ -23,7 +23,7 @@ Son tag'den bu yana olan commit'leri okuyup Keep-a-Changelog formatında taslak 
 | `fix` | Fixed |
 | `refactor`, `perf`, `style` | Changed |
 | `revert` | Removed |
-| `docs`, `test`, `build`, `chore` | (girmez, opsiyonel) |
+| `docs`, `test`, `build`, `ci`, `chore` | (girmez, opsiyonel) |
 
 ## Çıktı
 

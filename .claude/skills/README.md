@@ -46,7 +46,16 @@ projelere iner — `astro-web`, `react`, `node-web` profilleri `.includes` ile `
 
 Sebebi: web arayüzü olmayan projelerin (C++/ROS2, Python, docs-only) `.claude/skills/` dizini
 kullanılmayan 10 skill taşıyordu; `description` daraltması onları tetiklenmez kılıyordu ama
-listeden ve bakım yükünden çıkarmıyordu. Katalog: [`profiles/web-ui/README.md`](../../../profiles/web-ui/README.md).
+listeden ve bakım yükünden çıkarmıyordu. Katalog: `claude-foundation/profiles/web-ui/README.md` (bu dosya projeye kopyalandığında
+foundation ağacı burada olmadığı için link değil, adres verilir).
+
+### Öğrenme kasası skill'leri → `profiles/learning-vault/` altında
+
+6 kasa skill'i (`validate-note`·`sync-index`·`project-status`·`generate-kata`·`anki-generate`·
+`add-antipattern`) + 2 agent (`note-validator`·`cross-reference-builder`) `learning-vault`
+profiliyle gelir (DECISIONS#0030). Dört öğrenme kasasında bağımsız olarak aynı adlarla ortaya
+çıktıkları için kürate edildiler; alan bilgisi skill'e gömülü değil, kasadan (`_templates/` ·
+`katas/README.md` · `anki/README.md` · `checklist.md`) okunur.
 
 > Yan etkili akışlar (`commit-push-pr`, `audit`, `review-animations`, `improve-animations`,
 > `ui-prototype`, `pick-ui-library`) `disable-model-invocation: true` ile yalnız kullanıcı

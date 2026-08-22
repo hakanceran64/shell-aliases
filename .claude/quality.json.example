@@ -1,0 +1,11 @@
+{
+  "_doc": "Kalite kapısı sözleşmesi. Kopyala → .claude/quality.json. verify: repo-geneli (CI + commit öncesi). on_edit: tek dosya kapsamlı (format-lint hook'u çalıştırır, {file} yer tutucu). Boş komut = atlanır.",
+  "profile": "",
+  "verify": {
+    "format": "",
+    "lint": "",
+    "typecheck": "",
+    "test": ""
+  },
+  "on_edit": []
+}

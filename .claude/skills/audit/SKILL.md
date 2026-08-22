@@ -22,20 +22,23 @@ Projeyi uçtan uca denetle, `docs/audit/AUDIT-<tarih>.md` raporu üret ve bulgul
 
 ## Yöntem
 
-1. **Kapsamı belirle.** Yukarıdaki bağlam + `Glob`/`Grep` ile dilleri, katmanları, test/build
+1. **Tazelik kontrolü (ilk adım).** `git fetch --all` + `git rev-list --count HEAD..origin/<branch>`;
+   sıfır değilse **denetimi yapma** — geride bir kopyadan çıkan bulgular bayattır. Durumu operatöre
+   bildir, senkronizasyondan sonra tekrar çalıştır.
+2. **Kapsamı belirle.** Yukarıdaki bağlam + `Glob`/`Grep` ile dilleri, katmanları, test/build
    yapılandırmasını tespit et. Büyük dosyaları ve giriş noktalarını oku.
-2. **Eksen eksen denetle.** [`checklist.md`](checklist.md)'deki 8 ekseni uygula; her bulguya
+3. **Eksen eksen denetle.** [`checklist.md`](checklist.md)'deki 8 ekseni uygula; her bulguya
    `dosya:satır` kanıtı ver. Spekülasyon değil, gözlem.
-3. **Puanla.** Her eksen için `✅ iyi · ⚠️ dikkat · ❌ sorun` ve kısa gerekçe.
-4. **Rapor yaz.** [`report-template.md`](report-template.md)'i doldur → `docs/audit/AUDIT-<YYYY-MM-DD>.md`.
+4. **Puanla.** Her eksen için `✅ iyi · ⚠️ dikkat · ❌ sorun` ve kısa gerekçe.
+5. **Rapor yaz.** [`report-template.md`](report-template.md)'i doldur → `docs/audit/AUDIT-<YYYY-MM-DD>.md`.
    Dizin yoksa oluştur. Aynı gün ikinci audit ise `-2` ekle.
-5. **Backlog'a task aç.** `⚠️`/`❌` her bulgu için `docs/backlog/BACKLOG.md`'ye bir task ekle
+6. **Backlog'a task aç.** `⚠️`/`❌` her bulgu için `docs/backlog/BACKLOG.md`'ye bir task ekle
    (dosya yoksa oluştur). Format:
    ```
    - [ ] [P{1|2|3}] {eksen}: {kısa başlık} — {dosya:satır} (AUDIT-<tarih>)
    ```
    Öncelik: `❌`→P1, `⚠️`→P2, iyileştirme önerisi→P3.
-6. **Özet dön.** Operatöre: eksen skorları tablosu + en kritik 3 task + rapor yolu.
+7. **Özet dön.** Operatöre: eksen skorları tablosu + en kritik 3 task + rapor yolu.
 
 ## Kısıtlar
 

@@ -37,6 +37,7 @@ opt-in:      Co-Authored-By: <model> <noreply@anthropic.com>
 | `chore` | config, scaffold | — |
 | `perf` | performans | PATCH |
 | `style` | format/whitespace | — |
+| `ci` | CI yapılandırması / workflow | — |
 | `revert` | önceki commit'i geri al | — |
 
 `BREAKING CHANGE:` footer veya `type!` → MAJOR.

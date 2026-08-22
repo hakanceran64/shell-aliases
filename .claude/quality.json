@@ -1,0 +1,12 @@
+{
+  "profile": "docs-only",
+  "verify": {
+    "format": "",
+    "lint": "python3 .claude/skills/mermaid-check/validate.py --workspace",
+    "typecheck": "",
+    "test": ""
+  },
+  "on_edit": [
+    { "match": "*.md", "format": "", "lint": "python3 .claude/skills/mermaid-check/validate.py {file}" }
+  ]
+}

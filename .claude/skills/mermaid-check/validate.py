@@ -3,7 +3,7 @@
 
 Kullanım:
     python3 validate.py <file.md>
-    python3 validate.py --workspace
+    python3 validate.py --workspace [--exclude <dizin>]...
     python3 validate.py --stdin
 
 Exit code:
@@ -21,6 +21,13 @@ from pathlib import Path
 
 MERMAID_BLOCK = re.compile(r"```mermaid\s*\n(.*?)```", re.DOTALL | re.MULTILINE)
 CODE_FENCE = re.compile(r"^```(\S*)\s*$")
+
+# Kenar (edge) sözdizimi OLMAYAN tipler: hiyerarşi girintiden, satırlar serbest metindir.
+# Buralarda `→` bir kenar değil, düğüm/etiket metnidir — flag'lemek yanlış pozitiftir.
+NO_EDGE_DIAGRAMS = {
+    "mindmap", "timeline", "journey", "pie", "gantt", "quadrantChart",
+    "xychart-beta", "sankey-beta", "packet-beta", "radar-beta", "kanban",
+}
 
 VALID_DIAGRAM_TYPES = {
     "flowchart", "graph", "sequenceDiagram", "classDiagram", "stateDiagram",
@@ -98,12 +105,26 @@ def validate_block(content: str) -> list[tuple[str, str, str]]:
         issues.append(("legacy-graph", "modern syntax: 'flowchart TD'", first))
 
     # Unicode arrow (sequenceDiagram'da participant message metni içinde olabilir; label içinde quote'lu varsa skip)
+    in_note = False
+    if diag_word_clean in NO_EDGE_DIAGRAMS:
+        lines = []                       # kenarı olmayan diyagramda ok karakteri aranmaz
     for i, ln in enumerate(lines, 1):
-        # quote içinde ise atla
-        if "→" in ln or "←" in ln or "⇒" in ln:
-            # quote içine alınmış kısımları çıkar
-            stripped = re.sub(r'"[^"]*"', '', ln)
-            stripped = re.sub(r'\[[^\[\]]*\]', '', stripped)
+        # Çok satırlı not gövdesi: `note right of X` ... `end note` arası serbest metindir.
+        bare = ln.strip()
+        if re.match(r"^note\b", bare, re.IGNORECASE) and ":" not in bare:
+            in_note = True
+            continue
+        if in_note:
+            if re.match(r"^end\s+note\b", bare, re.IGNORECASE):
+                in_note = False
+            continue
+        # Unicode ok YALNIZ mermaid'in kenar beklediği yerde sorundur. Etiket metninde
+        # (`A->>B: ... → ...`) veya not gövdesinde zararsızdır — orada flag'lemek yanlış
+        # pozitif üretir ve dokümanı kurala uydurmak için anlamsızca değiştirtir.
+        if not in_note and ("→" in ln or "←" in ln or "⇒" in ln):
+            stripped = re.sub(r'"[^"]*"', '', ln)          # quote'lu metin
+            stripped = re.sub(r'\[[^\[\]]*\]', '', stripped)  # köşeli parantezli etiket
+            stripped = stripped.split(":", 1)[0]           # `:` sonrası etiket metnidir
             if "→" in stripped or "←" in stripped or "⇒" in stripped:
                 issues.append(("unicode-arrow", "ASCII '-->' kullan veya quote içine al", ln))
 
@@ -189,12 +210,18 @@ def check_stdin() -> list[Issue]:
     return out
 
 
-def find_md_files(root: Path) -> list[Path]:
+def find_md_files(root: Path, exclude: list[str] | None = None) -> list[Path]:
+    """Workspace'teki .md dosyaları. `exclude`: köke göreli yol öneki veya dizin adı
+    (ör. vendor'lanmış/salt-okunur ağaçlar — bizim düzeltemeyeceğimiz içerik)."""
     out: list[Path] = []
     skip = {"node_modules", ".git", "__pycache__", "temp", ".cache",
             "_deps", "build", "dist", "target", "Clippings", ".obsidian"}
+    extra = [e.strip("/") for e in (exclude or []) if e.strip("/")]
     for p in root.rglob("*.md"):
         if any(part in skip for part in p.parts):
+            continue
+        rel = p.relative_to(root).as_posix()
+        if any(rel == e or rel.startswith(e + "/") or e in p.relative_to(root).parts for e in extra):
             continue
         out.append(p)
     return out
@@ -206,6 +233,8 @@ def main() -> int:
     ap.add_argument("--workspace", action="store_true", help="Tüm workspace'i tara")
     ap.add_argument("--stdin", action="store_true", help="stdin'den oku")
     ap.add_argument("--root", default=".", help="Workspace kökü")
+    ap.add_argument("--exclude", action="append", default=[],
+                    help="Taramadan çıkarılacak yol/dizin (tekrarlanabilir; ör. --exclude wiki)")
     args = ap.parse_args()
 
     issues: list[Issue] = []
@@ -213,7 +242,7 @@ def main() -> int:
         issues = check_stdin()
     elif args.workspace:
         root = Path(args.root).resolve()
-        for f in find_md_files(root):
+        for f in find_md_files(root, args.exclude):
             issues.extend(check_file(f))
     elif args.file:
         issues = check_file(Path(args.file))

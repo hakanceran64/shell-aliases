@@ -18,8 +18,14 @@ Kit'in `deny` listesi **asgari**dir: proje genişletebilir, **daraltamaz**. Bir 
 izin matrisini sahiplenmesi (`.ceran/ecosystem.yaml` → `local: [settings.json]`) yalnız
 `allow`/`ask` için geçerlidir; `deny` girdilerini düşürmek 02-guvenlik'i delmek demektir.
 
-`local` beyanı sync'i durdurduğu için bu taban otomatik gelmez — yeni bir kit `deny` girdisi
-eklendiğinde sahiplenen projelere elle taşınır.
+Beyan **makine tarafından okunur**: `new-project.sh --check` sahiplenilen dosyanın farkını bulgu
+değil bilgi (`ℹ`) sayar ve `--update --force` bile onu ezmez. JSON dosyalarında biçim değil **anlam**
+karşılaştırılır (yeniden biçimlendirme sahte drift üretmez).
+
+**Taban zorlanır:** `--check` ayrıca kit'in `deny` listesinin hedefte **eksiksiz** olduğunu doğrular;
+eksik girdiler tek tek raporlanır ve exit 1 verir. Sahiplik beyanı burada geçersizdir — sahiplenme
+`allow`/`ask` içindir, güvenlik tabanı için değil. Yeni bir kit `deny` girdisi eklendiğinde sahiplenen
+projelere elle taşınır; taşınmazsa `--check` bunu sessizce geçmez.
 
 ## İlkeler
 

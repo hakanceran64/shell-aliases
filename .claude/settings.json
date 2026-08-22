@@ -126,7 +126,8 @@
       {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/post-tool-use/claude-config-watcher.sh", "timeout": 10 }
+          { "type": "command", "command": "bash .claude/hooks/post-tool-use/claude-config-watcher.sh", "timeout": 10 },
+          { "type": "command", "command": "bash .claude/hooks/post-tool-use/format-lint.sh", "timeout": 20 }
         ]
       }
     ],

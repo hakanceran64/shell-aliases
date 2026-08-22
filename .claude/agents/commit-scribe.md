@@ -28,6 +28,7 @@ flowchart TD
     Q -- "yapı, davranış aynı" --> refactor["refactor"]
     Q -- "test" --> test["test"]
     Q -- "toolchain/docker/deps" --> build["build"]
+    Q -- "CI yapılandırması" --> ci["ci"]
 ```
 
 ## Kurallar
