@@ -481,3 +481,26 @@ Yeni alias eklemek için:
 1. İlgili `aliases/*.sh` dosyasını düzenle
 2. Zaten kuruluysa değişiklikler otomatik aktif olur (`reload` ile anında)
 3. Yeni kategori gerekiyorsa `aliases/yeni.sh` oluştur ve `install.sh`'e `source` satırını ekle
+
+## 📊 Kod İstatistikleri
+
+<!-- ceran-loc:start -->
+> Kaynak: `ceran-loc v1.3.0` · git (.gitignore uygulandı) · 2026-08-23
+> Hariç: ceran-loc
+
+| Dosya | Kod | Yorum | Boş | Toplam |
+|---:|---:|---:|---:|---:|
+| 51 | **1.985** | 199 | 541 | 2.725 |
+
+| Uzantı | Kod | Yorum | Boş | Dosya | Pay |
+|---|---:|---:|---:|---:|---:|
+| `.md` | 1.173 | 4 | 431 | 26 | %59 |
+| `.sh` | 338 | 148 | 73 | 14 | %17 |
+| `.py` | 247 | 40 | 33 | 1 | %12 |
+| `.json` | 159 | 0 | 0 | 2 | %8 |
+| `.example` | 40 | 0 | 0 | 3 | %2 |
+| `.yaml` | 13 | 5 | 1 | 2 | %0 |
+| `.yml` | 12 | 1 | 3 | 1 | %0 |
+| `.gitignore` | 2 | 1 | 0 | 1 | %0 |
+| `(uzantısız)` | 1 | 0 | 0 | 1 | %0 |
+<!-- ceran-loc:end -->
