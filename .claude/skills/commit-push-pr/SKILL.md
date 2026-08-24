@@ -20,8 +20,11 @@ Yukarıdaki değişikliklere göre:
 1. `main`/`master` üzerindeysen önce yeni bir branch oluştur.
 2. Conventional Commits formatında **İngilizce** tek bir commit oluştur (bkz. `.claude/rules/03-commit.md`).
    AI atfı **ekleme** (varsayılan kapalı).
-3. Branch'i `origin`'e push et.
-4. `gh pr create` ile PR aç — başlık + özet İngilizce.
+3. Branch'i **yapılandırılmış her remote'a** push et — `git remote` ile listele, hepsine bas.
+   Bu ekosistemde repolar çoğunlukla iki remote taşır (`origin` = GitHub, `gitlab` =
+   git.ceran.com); yalnız `origin`'e basmak yedeğin bir bacağını sessizce eskitir. Tek remote'lu
+   repoda (ör. yalnız `gitlab`) doğal olarak tek push olur.
+4. `gh pr create` ile PR aç — başlık + özet İngilizce. Repo'nun GitHub remote'u yoksa bu adım atlanır.
 
 > `git push` ve `gh pr create` `ask` iznindedir; onay sorulacaktır (bkz. `02-guvenlik.md`).
 > Mümkünse tüm adımları tek mesajda, ardışık tool çağrılarıyla yap.
