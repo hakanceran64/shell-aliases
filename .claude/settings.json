@@ -102,7 +102,16 @@
       {
         "matcher": ".*",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/session-start/show-context.sh", "timeout": 10 }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-start/show-context.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/session-start/pulse-resume.sh",
+            "timeout": 10
+          }
         ]
       }
     ],
@@ -110,7 +119,11 @@
       {
         "matcher": ".*",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/user-prompt-submit/inject-context.sh", "timeout": 10 }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/user-prompt-submit/inject-context.sh",
+            "timeout": 10
+          }
         ]
       }
     ],
@@ -118,7 +131,11 @@
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/pre-tool-use/bash-guard.sh", "timeout": 5 }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/pre-tool-use/bash-guard.sh",
+            "timeout": 5
+          }
         ]
       }
     ],
@@ -126,8 +143,16 @@
       {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/post-tool-use/claude-config-watcher.sh", "timeout": 10 },
-          { "type": "command", "command": "bash .claude/hooks/post-tool-use/format-lint.sh", "timeout": 20 }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-tool-use/claude-config-watcher.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/post-tool-use/format-lint.sh",
+            "timeout": 20
+          }
         ]
       }
     ],
@@ -135,7 +160,17 @@
       {
         "matcher": ".*",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/stop/wrap-up.sh", "timeout": 10, "async": true }
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/stop/wrap-up.sh",
+            "timeout": 10,
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/stop/pulse-record.sh",
+            "timeout": 15
+          }
         ]
       }
     ]
