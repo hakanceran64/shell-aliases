@@ -106,7 +106,7 @@ fi
 
 # 3) claude-foundation'a sync sinyali (varsa; aynı proje+yol zaten bekliyorsa tekrarlanmaz)
 # Hedef, ekosistem kökündeki KANONİK checkout'tur — eco.py ile aynı çözümleme sırası.
-FOUNDATION_DIR="${CLAUDE_FOUNDATION_DIR:-${CERAN_ECOSYSTEM_ROOT:-$HOME/Backup/GitHub}/claude-foundation}"
+FOUNDATION_DIR="${CLAUDE_FOUNDATION_DIR:-${CERAN_ECOSYSTEM_ROOT:-$HOME/Backup/GitHub/hakanceran64}/core/claude-foundation}"
 
 # Vendor/submodule kopyası hedef gösterilirse kuyruk okunmayan bir yere yazılır.
 # Sessiz veri kaybı yerine uyar ve sinyali atla (2026-08-16: Node/claude-foundation

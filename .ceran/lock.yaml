@@ -3,4 +3,4 @@
 generated: 2026-08-24T17:22:33Z
 installed:
   ai-foundation: { mode: vendor, version: v1.1.3, source_sha: 9a09e24, digest: 2b3a18c0b0964028, files: 33, profiles: docs-only }
-  wiki: { mode: link, path: /Users/ceran/Backup/GitHub/hakanceran64/devkit-wiki, sha: 605f3d8 }
+  wiki: { mode: link, path: /Users/ceran/Backup/GitHub/hakanceran64/core/devkit-wiki, sha: 605f3d8 }
