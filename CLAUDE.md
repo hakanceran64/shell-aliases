@@ -9,7 +9,7 @@
 Günlük terminali kullanımını hızlandırmak için hazırlanmış zsh alias ve fonksiyon koleksiyonu. Dosya yönetiminden git'e, ağ araçlarından sistem izlemeye kadar sık kullanılan işlemleri tek komuta indirger.
 
 - **Teknoloji:** Markdown / doküman — üretim kodu yok
-- **Çalışma dizini:** `/Users/ceran/Backup/GitHub/hakanceran64/shell-aliases`
+- **Çalışma dizini:** `/Users/ceran/Backup/GitHub/hakanceran64/devenv/shell-aliases`
 - **Ekosistem profili:** docs-only
 
 - Son commit: 2026-05-04 · Commit sayısı: 2 · Remote: gitlab, origin
