@@ -8,6 +8,7 @@ kullanılabilir). Bağlama `../settings.json` içindedir.
 | SessionStart | `session-start/show-context.sh` | proje · branch · kirli dosya · mevcut .claude bölümleri |
 | UserPromptSubmit | `user-prompt-submit/inject-context.sh` | her prompt'a güncel proje bağlamı (JSON) |
 | PreToolUse(Bash) | `pre-tool-use/bash-guard.sh` | yıkıcı komutları engelle (exit 2) |
+| PreToolUse(Task\|Agent\|Edit\|Write) | `pre-tool-use/model-guard.sh` | **yasak modeli (haiku · eski nesil tam kimlik) engelle** — çağrı parametresinde ve agent/skill/settings yazımında (exit 2) |
 | PostToolUse(Edit\|Write) | `post-tool-use/claude-config-watcher.sh` | **`.claude`/`CLAUDE.md` değişikliğini bildir + changelog + foundation sync sinyali** |
 | PostToolUse(Edit\|Write) | `post-tool-use/format-lint.sh` | **düzenlenen dosyayı formatla + lint'le; bulgu varsa exit 2** |
 | Stop | `stop/wrap-up.sh` | commit edilmemiş dosya özeti (async) |
@@ -34,6 +35,22 @@ arşivi tazeler. Foundation konumu `CLAUDE_FOUNDATION_DIR` ile ayarlanır (varsa
 `${CERAN_ECOSYSTEM_ROOT:-$HOME/Backup/GitHub}/claude-foundation` — ekosistem kökündeki kanonik
 checkout; submodule kopyası hedef gösterilirse hook uyarır ve sinyali atlar).
 Bkz. `claude-foundation/docs/GOVERNANCE.md`.
+
+## model-guard (model politikası)
+
+`agents/README.md` → **Model politikası**'nın çalıştırılabilir karşılığı (DECISIONS#0040): yalnız
+`opus` ve `sonnet`; `haiku` yasak. İki yüzeyi birden kapatır:
+
+1. **Çalışma anı** — bir subagent `model: haiku` ile çağrılırsa çağrı engellenir.
+2. **Yapılandırma** — `.claude/agents/*.md`, `skills/**/SKILL.md` ve `settings*.json` dosyalarına
+   haiku **yazılması** engellenir; dosya diske hiç düşmez.
+
+Yalnız `haiku` engellenir; tanınmayan değer işi durdurmaz (`inherit`, `claude-opus-5`, `sonnet[1m]`
+serbest). `.md` dosyalarında yalnız `model:` **beyanı** sayılır — gövdede geçen "haiku" kelimesi
+bulgu değildir. Bozuk JSON'da fail-open.
+
+Depo-geneli karşılığı `scripts/check-models.sh` (CI adımı): hook yalnız bu oturumdaki yazmayı
+engeller, script dosya nereden gelirse gelsin kapıyı kapatır.
 
 ## format-lint (kalite kapısı)
 

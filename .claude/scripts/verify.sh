@@ -10,6 +10,11 @@
 #
 # Tanımsız (boş) komut atlanır: her profilde her adım anlamlı değildir (ör. docs-only'de test yok).
 # --strict CI içindir: orada "araç yok" sessiz geçilirse kapı yeniden tavsiyeye döner.
+#
+# Adımlardan ÖNCE kit politikaları koşar (yapılandırılamaz, hep açık): şu an yalnız model
+# politikası (check-models.sh). Bunlar quality.json'a bağlı değildir çünkü stack'e değil KİTE
+# aittir; profil dosyasına konsaydı her profilde tekrarlanır ve biri unutulduğunda sessizce düşerdi.
+# Script yoksa atlanır (eski kit vendor'lamış proje kilitlenmesin); varsa ihlalde kapı KAPANIR.
 set -uo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -30,6 +35,21 @@ if [[ ! -f "$CONF" ]]; then
   echo "verify: .claude/quality.json yok — kalite kapısı tanımlı değil." >&2
   [[ "$STRICT" -eq 1 ]] && exit 1
   exit 0
+fi
+
+# --- kit politikaları (yapılandırılamaz) ---------------------------------
+POLICY="$ROOT/.claude/scripts/check-models.sh"
+if [[ -f "$POLICY" ]]; then
+  if OUT="$(bash "$POLICY" "$ROOT" 2>&1)"; then
+    printf '  ✓ %-9s model politikası\n' "politika"
+  else
+    printf '  ✗ %-9s model politikası\n' "politika"
+    printf '%s\n' "$OUT" >&2
+    echo "verify: 'politika' adımı geçmedi." >&2
+    exit 1
+  fi
+else
+  printf '  · %-9s check-models.sh yok — atlandı\n' "politika"
 fi
 
 FAILED=""

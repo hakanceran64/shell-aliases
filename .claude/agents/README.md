@@ -24,8 +24,39 @@ model: sonnet                  # orkestrasyon: opus | kod/doc: sonnet
 | [`code-reviewer`](code-reviewer.md) | sonnet | diff'i kalite/güvenlik/kural açısından inceler |
 | [`doc-writer`](doc-writer.md) | sonnet | README/doc/yorum yazar — Türkçe, mermaid'li |
 
+> **Paralel geliştirme ekibi** (`software-architect` · `senior-developer` · `design-specialist` ·
+> `test-engineer`) çekirdek kitte **değil**, paylaşılan `ai-team` overlay'indedir
+> (`claude-foundation/profiles/ai-team/README.md`). Ekibi kullanacak proje `.ceran/ecosystem.yaml`
+> içinde `ai-team`'i açıkça beyan eder — DECISIONS#0040.
+
 ## Model politikası
 
-- **opus** — çok-adımlı orkestrasyon, mimari planlama.
-- **sonnet** — kod yazımı, review, doc (varsayılan).
-- **haiku** — basit/mekanik işler; karmaşık muhakeme için kullanılmaz.
+**Yalnız `opus` ve `sonnet` kullanılır. `haiku` her sürümüyle yasaktır** (DECISIONS#0040).
+
+| Model | Nerede |
+|-------|--------|
+| `opus` | mimari planlama, tasarım muhakemesi, çok-adımlı orkestrasyon |
+| `sonnet` | kod yazımı, test, review, doc (**varsayılan**) |
+| ~~`haiku`~~ | **hiçbir yerde** — "basit iş" istisnası yok |
+
+Model **alias** ile yazılır (`opus` · `sonnet` · `inherit`); tam kimlik sabitlenmez. Eski nesil kimlikler
+(`claude-3*`, `claude-opus-4*`, `claude-sonnet-4*`) `model-guard` ve `check-models` tarafından reddedilir
+(DECISIONS#0043) — sabitlenen kimlik model değişince sessizce eskir, alias merkezden ilerler.
+
+**Neden:** maliyet **modeli küçülterek** değil **bağlamı küçülterek** düşürülür. Bağlamı dar tutan
+tasarım (bkz. `profiles/ai-team/`) hem daha ucuzdur hem de muhakemeyi feda etmez. "Mekanik" görünen
+bir adım da kural ihlal edebilir — silinen bir test, susturulan bir lint, sızdırılan bir sır — ve
+ucuz model bunu sessizce kaçırır. Sessiz ihlal, tasarruf ettiği token'dan pahalıdır.
+
+**Kapsam:** agent frontmatter'ı · skill frontmatter'ı · `settings*.json` · `Agent`/`Task` çağrısındaki
+`model` parametresi · CLI `--model`.
+
+**Zorlama** (beyan değil, çalıştırılabilir):
+
+| Katman | Ne yapar |
+|--------|----------|
+| [`../hooks/pre-tool-use/model-guard.sh`](../hooks/pre-tool-use/model-guard.sh) | Oturum içinde `Agent`/`Task` çağrısını ve korunan dosyalara yazmayı **engeller** (exit 2) |
+| [`../scripts/check-models.sh`](../scripts/check-models.sh) | Depoyu tarar; dosya nereden gelirse gelsin (başka makine, merge, elle düzenleme) kapıyı kapatır — CI adımı |
+
+Yalnız `haiku` engellenir; `opus`, `sonnet`, `inherit`, `claude-opus-5`, `sonnet[1m]` gibi biçimler
+serbesttir. Gövde metninde geçen "haiku" kelimesi bulgu değildir — yalnız `model:` **beyanı** sayılır.

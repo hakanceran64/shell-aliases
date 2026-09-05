@@ -34,6 +34,7 @@ Yalnız `description` önerilir. Detay: `_TEMPLATE.md` ve [Claude Docs — skill
 | [`changelog-draft`](changelog-draft/SKILL.md) | `/changelog-draft` | her ikisi | git log'dan Keep-a-Changelog taslağı |
 | [`commit-push-pr`](commit-push-pr/SKILL.md) | `/commit-push-pr` | yalnız kullanıcı | commit + push + PR |
 | [`mermaid-check`](mermaid-check/SKILL.md) | `/mermaid-check` | her ikisi | mermaid diyagram doğrulama |
+| [`insights`](insights/SKILL.md) | `/insights` | her ikisi | ekosistem çıkarımları → bakımsız repo, plan dışına akan zaman |
 | [`_TEMPLATE.md`](_TEMPLATE.md) | — | — | yeni skill iskeleti (skill değil, kopyalanır) |
 
 ### UI craft → artık `profiles/web-ui/` altında
@@ -48,6 +49,17 @@ Sebebi: web arayüzü olmayan projelerin (C++/ROS2, Python, docs-only) `.claude/
 kullanılmayan 10 skill taşıyordu; `description` daraltması onları tetiklenmez kılıyordu ama
 listeden ve bakım yükünden çıkarmıyordu. Katalog: `claude-foundation/profiles/web-ui/README.md` (bu dosya projeye kopyalandığında
 foundation ağacı burada olmadığı için link değil, adres verilir).
+
+### Paralel geliştirme ekibi → `profiles/ai-team/` altında
+
+`/spec` ve `/build-feature` skill'leri (+ `software-architect`·`senior-developer`·`design-specialist`·
+`test-engineer` agent'ları) çekirdek kitte **değil**, paylaşılan `ai-team` overlay'indedir
+(DECISIONS#0040). Bir iş birimini spec'ten uygulamaya taşıyan beş rollü ekibi kurarlar; fikir
+**bağlamı bölmektir** — mimar geniş okur/az yazar, geliştirici az okur/çok yazar.
+
+`web-ui`'nin aksine `.includes` ile otomatik inmez: kullanacak proje `.ceran/ecosystem.yaml`
+içinde açıkça beyan eder (`profiles: [<stack>, ai-team]`). Sebebi, bunun bir stack gerçeği değil
+**süreç tercihi** olmasıdır. Katalog: `claude-foundation/profiles/ai-team/README.md`.
 
 ### Öğrenme kasası skill'leri → `profiles/learning-vault/` altında
 

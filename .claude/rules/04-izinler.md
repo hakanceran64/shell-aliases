@@ -33,8 +33,9 @@ projelere elle taşınır; taşınmazsa `--check` bunu sessizce geçmez.
 - **Mutlak path yok:** izinler taşınabilir olmalı (`Bash(cmd:*)` formu, repo-yolu gömme yok).
 - **Yıkıcı = deny:** geri-alınamaz operasyonlar `deny`'de, [02-guvenlik.md](02-guvenlik.md) ile hizalı.
 - **Yerel override:** makineye-özel izinler `settings.local.json`'a (gitignore'lu) yazılır, kit'e girmez.
-- **MCP:** `enableAllProjectMcpServers` ile proje `.mcp.json` server'ları otomatik etkin;
-  dış erişim `WebFetch(domain:...)` ile beyaz listelenir.
+- **MCP:** `enableAllProjectMcpServers: false` (DECISIONS#0042) — proje `.mcp.json` server'ları
+  otomatik ETKİNLEŞMEZ, ilk kullanımda onay ister; repoya sızan bir `.mcp.json` böylece komut çalıştıramaz.
+  Bilinçli istisna `settings.local.json`'a yazılır. Dış erişim `WebFetch(domain:...)` ile beyaz listelenir.
 
 ## İlgili
 
