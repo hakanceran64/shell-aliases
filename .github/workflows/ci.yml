@@ -1,4 +1,7 @@
-# claude-foundation `docs-only` profili — kalite kapısı (mermaid doğrulama; üretim kodu yok).
+# claude-foundation kit şablonu — kalite kapısı, INLINE biçim (DECISIONS#0026/#0047).
+# Komutlar burada DEĞİL, `.claude/quality.json` → verify{} içindedir; bu dosya yalnız toolchain'i kurar.
+# Öntanımlı çağırıcı biçim profiles/<ad>/templates/ci.yml'dedir (reusable ceran-conform.yml). Bu inline
+# biçim PUBLIC repolar içindir: private bir reusable workflow public repodan çağrılamaz.
 name: ci
 
 on:
@@ -11,6 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # {{toolchain kurulumu — profiline göre ekle: setup-node · setup-go · setup-python …}}
+
+      - name: şema kapısı (.claude/scripts/validate-config.py)
+        run: python3 .claude/scripts/validate-config.py --project-root .
 
       - name: kalite kapısı (.claude/quality.json → verify)
         run: bash .claude/scripts/verify.sh --strict
