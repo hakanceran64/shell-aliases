@@ -52,6 +52,26 @@ else
   printf '  · %-9s check-models.sh yok — atlandı\n' "politika"
 fi
 
+# Şema kapısı (DECISIONS#0047): manifest · quality.json · settings.json deny tabanı · frontmatter.
+# validate-config.py kitin ürettiği tek dosyadır (kaynak claude-foundation schemas/). --strict'te yokluğu hata.
+SCHEMA_GATE="$ROOT/.claude/scripts/validate-config.py"
+if [[ -f "$SCHEMA_GATE" ]]; then
+  OUT="$(python3 "$SCHEMA_GATE" --project-root "$ROOT" --quiet 2>&1)"; SCHEMA_RC=$?
+  if [[ $SCHEMA_RC -eq 0 ]]; then
+    printf '  ✓ %-9s yapılandırma şemaları\n' "şema"
+  elif [[ $SCHEMA_RC -eq 3 ]]; then
+    printf '  · %-9s doğrulayıcı ortamı eksik — atlandı\n' "şema"
+  else
+    printf '  ✗ %-9s yapılandırma şemaları\n' "şema"
+    printf '%s\n' "$OUT" >&2
+    echo "verify: 'şema' adımı geçmedi." >&2
+    exit 1
+  fi
+else
+  printf '  · %-9s validate-config.py yok — atlandı\n' "şema"
+  [[ "$STRICT" -eq 1 ]] && { echo "verify: --strict: şema kapısı yok (dev eco sync ile kiti güncelle)." >&2; exit 1; }
+fi
+
 FAILED=""
 for step in "${STEPS[@]}"; do
   CMD="$(CONF="$CONF" STEP="$step" python3 -c '
