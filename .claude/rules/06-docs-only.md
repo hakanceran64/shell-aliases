@@ -8,7 +8,7 @@ Bu profil, kaynak kod değil **dokümantasyon** üreten projeler içindir (planl
 ## Stack kararları (toolchain)
 
 > **Toolchain sürümlerinin kanonik kaynağı:** `devkit-wiki/registry/stack-registry.yaml`
-> (profil `docs-only`; foundation'da vendored kopya: `wiki/registry/stack-registry.yaml`).
+> (profil `docs-only`).
 > Aşağıdaki tablo oradan türetilmiştir — sürüm değişecekse **önce registry'de** değiştir,
 > sonra burayı güncelle. Upstream'de `lint-wiki.sh` referansların varlığını, foundation'da
 > `tests/registry-sync.py` tablodaki araçların registry ile eşleştiğini doğrular.
@@ -43,5 +43,5 @@ Mimari kararlar `/ceran-core:adr` skill'i ile kaydedilir; numara atlanmaz, eski 
 
 ## İlgili
 
-- Tam set: `sources/Home-SYNC/.claude/` (skills: `adr`, `check-mermaid`, `doc-audit`; hook: `validate-no-code.sh`).
+- Tam set: `Home-SYNC` reposunun `.claude/` dizini (skills: `adr`, `check-mermaid`, `doc-audit`; hook: `validate-no-code.sh`).
 - Çekirdek: `/ceran-core:adr` skill'i (`ceran-core` plugin'i, DECISIONS#0046)

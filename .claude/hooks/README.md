@@ -6,13 +6,14 @@ bir oyun projesinin `level-validate.sh`'ı). Kayıtları projenin `../settings.j
 ## Paylaşılan hook'lar burada DEĞİL — plugin'de (DECISIONS#0046)
 
 2026-09-06'dan (kit v3.0.0) itibaren kit hiçbir hook dosyası kopyalamaz ve `settings.json`'a
-hook kaydı yazmaz. Dört proje hook'u `ceran` marketplace plugin'lerinde tek nüshadır ve
+hook kaydı yazmaz. Beş proje hook'u `ceran` marketplace plugin'lerinde tek nüshadır ve
 `enabledPlugins` ile gelir (`${CLAUDE_PLUGIN_ROOT}` altından, proje cwd'sinde koşar):
 
 | Plugin | Olay | Hook | Görev |
 |--------|------|------|-------|
 | `ceran-core` | PostToolUse(Edit\|Write) | `hooks/format-lint.sh` | **düzenlenen dosyayı `.claude/quality.json` → `on_edit[]` ile formatla + lint'le; bulgu → exit 2** |
-| `ceran-core` | PostToolUse(Edit\|Write) | `hooks/claude-config-watcher.sh` | `.claude/**` / `CLAUDE.md` değişikliğini bildir + `.claude/CHANGELOG.md` + foundation sync sinyali |
+| `ceran-core` | PostToolUse(Edit\|Write) | `hooks/claude-config-watcher.sh` | `.claude/**` / `CLAUDE.md` değişikliğini bildir + `.claude/CHANGELOG.md` (gözlem günlüğü) |
+| `ceran-core` | PostToolUse · ConfigChange | `hooks/config-validate.sh` | manifest · quality · settings · frontmatter şemaları; `ConfigChange`'de bozuk dosyayı **bloklar** (DECISIONS#0047) |
 | `ceran-pulse` | SessionStart | `hooks/pulse-resume.sh` | oturumu NodeFlow'da açar, "nerede kalmıştın" (fail-open) |
 | `ceran-pulse` | Stop | `hooks/pulse-record.sh` | oturumu kapatır: süre + commit'ler (senkron, fail-open) |
 
@@ -35,23 +36,22 @@ binary'sindedir (`~/.ceran/bin/ceran-hooks`), kullanıcı katmanında (`~/.claud
 - Kaydı `settings.json` → `hooks.<Event>[]` altına yaz; `dev eco sync` projenin kendi kayıtlarına dokunmaz.
 - Paylaşılabilir bir hook yazdıysan buraya değil `claude-foundation/plugins/`'e taşı (sürümlü, tek nüsha).
 
-## claude-config-watcher (governance)
+## claude-config-watcher (gözlem günlüğü)
 
-Projedeki `.claude/**` veya `CLAUDE.md` her değiştiğinde (plugin hook'u):
-1. Operatöre `📢` ile bildirir,
-2. `.claude/CHANGELOG.md`'ye satır ekler,
-3. foundation'a iki sinyal bırakır: insan-okunur `docs/SYNC-QUEUE.md` + makine-okunur
-   `docs/sync-queue.jsonl` (işlenebilir). Hedef `CLAUDE_FOUNDATION_DIR` (yoksa
-   `${CERAN_ECOSYSTEM_ROOT}/core/claude-foundation`).
+Projedeki `.claude/**`, `CLAUDE.md`, `.ceran/**` veya tasarım token dosyası her değiştiğinde (plugin hook'u):
+1. Operatöre `📢` ile bildirir (hangi merkez repoyu ilgilendirdiğini söyler),
+2. `.claude/CHANGELOG.md`'ye satır ekler.
+
+Foundation'a sinyal **bırakmaz** (ceran-core 2.0.0, DECISIONS#0048): drift'i gece `dev eco doctor` ölçer,
+bozuk config'i `config-validate` hook'u `ConfigChange`'de durdurur. `ceran-design-system/dist/**`
+düzenlemesini **engeller** (exit 2 — üretilen dizin).
 
 **Proje kimliği** düzenlenen dosyanın **repo kökünden** okunur (`git rev-parse --show-toplevel`),
 cwd'den değil; yol da repo köküne göre yazılır.
 
-**Sinyal üretmeyenler:** `settings.local.json` · `CHANGELOG.md` (kendi çıktısı) · `.ceran/lock.yaml`
+**Sessiz kalanlar:** `settings.local.json` · `CHANGELOG.md` (kendi çıktısı) · `.ceran/lock.yaml`
 (üretilen) · Claude Code'un kendi oturum state'i (`.claude/projects|plans|todos|shell-snapshots|statsig`)
-· `.claude/worktrees/**` (çalışma kopyası). İşleme foundation'da: `scripts/sync-review.sh`
-(`--list` · `--issue` · `--clear` · `--prune`), ardından `scripts/sync-sources.sh`.
-Bkz. `claude-foundation/docs/GOVERNANCE.md`.
+· `.claude/worktrees/**` (çalışma kopyası) · foundation `kit/` · `plugins/` · `profiles/` kaynağı.
 
 ## format-lint (kalite kapısı)
 

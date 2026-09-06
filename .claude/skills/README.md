@@ -14,7 +14,7 @@ yapısal olarak imkânsız.
 
 | Plugin | Komutlar | Nasıl gelir |
 |--------|----------|-------------|
-| `ceran-core` | `/ceran-core:adr` · `/ceran-core:audit` · `/ceran-core:changelog-draft` · `/ceran-core:commit-push-pr` | her üyede (kit öntanımlısı) |
+| `ceran-core` | `/ceran-core:assess` · `feature-spec` · `tasks` · `bugfix` (fikir → spec → görev → bug akışı) · `adr` · `audit` · `changelog-draft` · `ship` (commit + her remote'a push) | her üyede (kit öntanımlısı) |
 | `ceran-pulse` | `/ceran-pulse:insights` (+ oturum kaydı hook'ları) | her üyede; manifestte `plugins.disable` ile kapatılır |
 | `ceran-web-ui` | `/ceran-web-ui:animate` · `ui-craft` · `review-animations` · `improve-animations` · `find-animation-opportunities` · `animation-vocabulary` · `apple-design` · `pick-ui-library` · `ui-prototype` · `sonner` | web profilleri (`react` · `astro-web` · `node-web`) `.includes` → `web-ui` |
 | `ceran-ai-team` | `/ceran-ai-team:spec` · `/ceran-ai-team:build-feature` | manifestte `profiles: [<stack>, ai-team]` açık beyanı |

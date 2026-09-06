@@ -11,13 +11,12 @@ marketplace'inin plugin'lerinden gelir (`.claude/settings.json` → `enabledPlug
 | Plugin | Agent | Model | Görev |
 |--------|-------|-------|-------|
 | `ceran-core` | `code-reviewer` | sonnet | diff'i kalite/güvenlik/kural açısından inceler |
-| `ceran-core` | `commit-scribe` | sonnet | Conventional Commit mesajı yazar |
-| `ceran-core` | `doc-writer` | sonnet | README/doc/yorum yazar — Türkçe, mermaid'li |
 | `ceran-ai-team` | `software-architect` · `design-specialist` | opus | mimari spec + iskelet dalgası · tasarım spec'i |
 | `ceran-ai-team` | `senior-developer` · `test-engineer` | sonnet | iş paketi gövdesi · vaka matrisi + kapı |
 | `ceran-learning-vault` | `note-validator` · `cross-reference-builder` | sonnet | kasa sayfası doğrulama · wikilink bütünlüğü |
 
-Kaynak: `claude-foundation/plugins/<ad>/agents/`. `ai-team` yalnız manifestte açık beyanla gelir
+`commit-scribe` ve `doc-writer` 2.0.0'da kaldırıldı (DECISIONS#0048): commit mesajı için ayrı bağlam gereksiz
+(K1 `commit` kuralı + `/ceran-core:ship`), doküman yazımı genel yetenek. Kaynak: `claude-foundation/plugins/<ad>/agents/`. `ai-team` yalnız manifestte açık beyanla gelir
 (`profiles: [<stack>, ai-team]` — DECISIONS#0040); `learning-vault` profiliyle gelir.
 
 ## Frontmatter standardı
