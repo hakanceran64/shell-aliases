@@ -1,6 +1,7 @@
 # Bu projenin ekosistemden tükettikleri.
 # Beyandır — gerçekte ne kurulu olduğunu .ceran/lock.yaml söyler.
 # Uygula: dev eco sync   ·   Doğrula: dev eco sync --check
+apiVersion: ceran/v2
 project:
   name: shell-aliases
   profiles: [docs-only]

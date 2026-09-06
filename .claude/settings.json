@@ -97,48 +97,17 @@
       "Read(**/credentials*)"
     ]
   },
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": ".*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/session-start/pulse-resume.sh",
-            "timeout": 10
-          }
-        ]
+  "extraKnownMarketplaces": {
+    "ceran": {
+      "source": {
+        "source": "git",
+        "url": "git@github.com:hakanceran64/claude-foundation.git"
       }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/post-tool-use/claude-config-watcher.sh",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/post-tool-use/format-lint.sh",
-            "timeout": 20
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": ".*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/stop/pulse-record.sh",
-            "timeout": 15
-          }
-        ]
-      }
-    ]
+    }
+  },
+  "enabledPlugins": {
+    "ceran-core@ceran": true,
+    "ceran-pulse@ceran": true
   },
   "env": {
     "LANG": "tr_TR.UTF-8"

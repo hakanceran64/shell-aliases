@@ -2,8 +2,33 @@
 
 Claude Code'da **custom command'lar skill'lere birleştirildi** (Claude Docs). `.claude/commands/*.md`
 hâlâ çalışır ama **legacy**; bu kit **skills-first**'tür. Bir skill, kendi klasöründe bir **`SKILL.md`**
-dosyasıdır; komut adı **klasör adından** gelir (`skills/audit/SKILL.md` → `/audit`). Yardımcı dosyalar
+dosyasıdır; komut adı **klasör adından** gelir (`skills/hasat/SKILL.md` → `/hasat`). Yardımcı dosyalar
 (`*-template.md`, `checklist.md`, `scripts/`) aynı klasörde durur ve `SKILL.md`'den linklenir.
+
+## Bu dizinde ne durur — yalnız PROJE skill'leri (DECISIONS#0046)
+
+Paylaşılan skill'ler 2026-09-06'dan (kit v3.0.0) itibaren buraya **kopyalanmaz**; `ceran`
+marketplace'inin plugin'lerinden gelir ve `.claude/settings.json` → `enabledPlugins` ile açılır
+(`dev eco sync` yazar). Plugin skill'leri **namespace'lidir**, proje skill'leri çıplaktır — çakışma
+yapısal olarak imkânsız.
+
+| Plugin | Komutlar | Nasıl gelir |
+|--------|----------|-------------|
+| `ceran-core` | `/ceran-core:adr` · `/ceran-core:audit` · `/ceran-core:changelog-draft` · `/ceran-core:commit-push-pr` | her üyede (kit öntanımlısı) |
+| `ceran-pulse` | `/ceran-pulse:insights` (+ oturum kaydı hook'ları) | her üyede; manifestte `plugins.disable` ile kapatılır |
+| `ceran-web-ui` | `/ceran-web-ui:animate` · `ui-craft` · `review-animations` · `improve-animations` · `find-animation-opportunities` · `animation-vocabulary` · `apple-design` · `pick-ui-library` · `ui-prototype` · `sonner` | web profilleri (`react` · `astro-web` · `node-web`) `.includes` → `web-ui` |
+| `ceran-ai-team` | `/ceran-ai-team:spec` · `/ceran-ai-team:build-feature` | manifestte `profiles: [<stack>, ai-team]` açık beyanı |
+| `ceran-learning-vault` | `/ceran-learning-vault:validate-note` · `sync-index` · `project-status` · `generate-kata` · `anki-generate` · `add-antipattern` | `learning-vault` profili |
+
+Kaynak: `claude-foundation/plugins/<ad>/skills/`. Katalog ve sürüm: `claude-foundation/.claude-plugin/marketplace.json`.
+Eski kopyalar `kit/tombstones.yaml` (ve profil `tombstones.yaml`'ları) ile `dev eco sync` tarafından kaldırılır.
+
+### Kitte kalan tek skill: `mermaid-check`
+
+| Skill | Komut | İnvocation | Görev |
+|-------|-------|------------|-------|
+| [`mermaid-check`](mermaid-check/SKILL.md) | `/mermaid-check` | her ikisi | mermaid diyagram doğrulama — **`validate.py` bir kalite kapısı aracıdır**: `quality.json` ve CI proje ağacından çağırır, bu yüzden plugin'e taşınmadı |
+| [`_TEMPLATE.md`](_TEMPLATE.md) | — | — | yeni proje skill'i iskeleti (skill değil, kopyalanır) |
 
 ## Frontmatter standardı (Claude Docs alanları)
 
@@ -23,56 +48,12 @@ context: fork                             # izole subagent
 
 Yalnız `description` önerilir. Detay: `_TEMPLATE.md` ve [Claude Docs — skills](https://code.claude.com/docs/en/slash-commands).
 
-## Mevcut skills
+## Proje skill'i yazarken
 
-### Çekirdek (proje süreçleri)
-
-| Skill | Komut | İnvocation | Görev |
-|-------|-------|------------|-------|
-| [`audit`](audit/SKILL.md) | `/audit` | yalnız kullanıcı | proje denetimi → rapor + backlog task'leri |
-| [`adr`](adr/SKILL.md) | `/adr` | her ikisi | yeni ADR (mimari karar kaydı) |
-| [`changelog-draft`](changelog-draft/SKILL.md) | `/changelog-draft` | her ikisi | git log'dan Keep-a-Changelog taslağı |
-| [`commit-push-pr`](commit-push-pr/SKILL.md) | `/commit-push-pr` | yalnız kullanıcı | commit + push + PR |
-| [`mermaid-check`](mermaid-check/SKILL.md) | `/mermaid-check` | her ikisi | mermaid diyagram doğrulama |
-| [`insights`](insights/SKILL.md) | `/insights` | her ikisi | ekosistem çıkarımları → bakımsız repo, plan dışına akan zaman |
-| [`_TEMPLATE.md`](_TEMPLATE.md) | — | — | yeni skill iskeleti (skill değil, kopyalanır) |
-
-### UI craft → artık `profiles/web-ui/` altında
-
-10 UI craft skill'i (`ui-craft`·`animate`·`review-animations`·`improve-animations`·
-`find-animation-opportunities`·`animation-vocabulary`·`apple-design`·`pick-ui-library`·
-`ui-prototype`·`sonner`) çekirdek kitten **paylaşılan `web-ui` overlay'ine** taşındı
-(`claude-foundation/profiles/web-ui/`, DECISIONS#0022). Bunlar yalnız web stack'i beyan eden
-projelere iner — `astro-web`, `react`, `node-web` profilleri `.includes` ile `web-ui`'yi çeker.
-
-Sebebi: web arayüzü olmayan projelerin (C++/ROS2, Python, docs-only) `.claude/skills/` dizini
-kullanılmayan 10 skill taşıyordu; `description` daraltması onları tetiklenmez kılıyordu ama
-listeden ve bakım yükünden çıkarmıyordu. Katalog: `claude-foundation/profiles/web-ui/README.md` (bu dosya projeye kopyalandığında
-foundation ağacı burada olmadığı için link değil, adres verilir).
-
-### Paralel geliştirme ekibi → `profiles/ai-team/` altında
-
-`/spec` ve `/build-feature` skill'leri (+ `software-architect`·`senior-developer`·`design-specialist`·
-`test-engineer` agent'ları) çekirdek kitte **değil**, paylaşılan `ai-team` overlay'indedir
-(DECISIONS#0040). Bir iş birimini spec'ten uygulamaya taşıyan beş rollü ekibi kurarlar; fikir
-**bağlamı bölmektir** — mimar geniş okur/az yazar, geliştirici az okur/çok yazar.
-
-`web-ui`'nin aksine `.includes` ile otomatik inmez: kullanacak proje `.ceran/ecosystem.yaml`
-içinde açıkça beyan eder (`profiles: [<stack>, ai-team]`). Sebebi, bunun bir stack gerçeği değil
-**süreç tercihi** olmasıdır. Katalog: `claude-foundation/profiles/ai-team/README.md`.
-
-### Öğrenme kasası skill'leri → `profiles/learning-vault/` altında
-
-6 kasa skill'i (`validate-note`·`sync-index`·`project-status`·`generate-kata`·`anki-generate`·
-`add-antipattern`) + 2 agent (`note-validator`·`cross-reference-builder`) `learning-vault`
-profiliyle gelir (DECISIONS#0030). Dört öğrenme kasasında bağımsız olarak aynı adlarla ortaya
-çıktıkları için kürate edildiler; alan bilgisi skill'e gömülü değil, kasadan (`_templates/` ·
-`katas/README.md` · `anki/README.md` · `checklist.md`) okunur.
-
-> Yan etkili akışlar (`commit-push-pr`, `audit`, `review-animations`, `improve-animations`,
-> `ui-prototype`, `pick-ui-library`) `disable-model-invocation: true` ile yalnız kullanıcı
-> tarafından tetiklenir — Claude bunları kendi başına çalıştırmaz.
-> Proje-özel skill'ler (ör. `flutter-feature`) profil paketleriyle eklenir.
-
-Web projesi olmayan bir repoda bu skill'ler artık **hiç kurulmaz**; gerekiyorsa projenin
-`.ceran/ecosystem.yaml` dosyasına ilgili web profili eklenir.
+- Ad çıplak ve projeye özgü olsun (`/hasat`, `/sinav-uret`); plugin adlarıyla (`adr`, `audit`, `spec`…)
+  çakışmaz ama aynı adı vermek okuyanı yanıltır.
+- Bir plugin skill'ini genişletmek istiyorsan **kopyalama** — proje skill'i plugin skill'ini
+  `/ceran-core:adr` diye çağırmaz (skill skill çağıramaz); sözleşme dosya biçimidir. Ortak parça
+  gerekiyorsa `claude-foundation/plugins/`'e taşı, sürüm yükselt.
+- `SKILL.md` adı büyük harfle yazılır; küçük harfli ad harf-duyarlı FS'te kaydolmaz
+  (`new-project.sh --check` bunu bulgu sayar).

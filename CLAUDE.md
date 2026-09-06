@@ -42,9 +42,10 @@ dev eco sync            # merkez güncellemelerini al
 | Bileşen | Yer |
 |---------|-----|
 | Kurallar | `.claude/rules/` |
-| Skills | `.claude/skills/` — `/audit`, `/adr`, `/commit-push-pr`, `/changelog-draft`, `/mermaid-check` |
-| Agents | `.claude/agents/` |
-| Hooks | `.claude/hooks/` |
+| Plugin'ler (K2) | `.claude/settings.json` → `enabledPlugins` — `ceran-core` (`/ceran-core:adr` · `audit` · `changelog-draft` · `commit-push-pr`; code-reviewer · commit-scribe · doc-writer; format-lint · watcher hook'ları) · `ceran-pulse` (oturum kaydı, `/ceran-pulse:insights`) |
+| Skills | `.claude/skills/` — yalnız proje skill'leri (çıplak ad) + `mermaid-check` (kapı aracı) |
+| Agents | `.claude/agents/` — yalnız proje agent'ları |
+| Hooks | `.claude/hooks/` — yalnız proje hook'ları; paylaşılanlar plugin'de, guard'lar K0/K1 `ceran-hooks`'ta |
 | Memory | `.claude/memory/` (+ `MEMORY.md` index) |
 
 ## Genişlet (bu dosyanın bilmediği şeyler)

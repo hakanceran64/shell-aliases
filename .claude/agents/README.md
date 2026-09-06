@@ -3,6 +3,23 @@
 Her agent **düz `agents/<name>.md`** dosyasıdır (native Claude Code formatı; klasör/`AGENT.md`
 desteklenmez).
 
+## Bu dizinde ne durur — yalnız PROJE agent'ları (DECISIONS#0046)
+
+Paylaşılan agent'lar 2026-09-06'dan (kit v3.0.0) itibaren buraya **kopyalanmaz**; `ceran`
+marketplace'inin plugin'lerinden gelir (`.claude/settings.json` → `enabledPlugins`, `dev eco sync` yazar):
+
+| Plugin | Agent | Model | Görev |
+|--------|-------|-------|-------|
+| `ceran-core` | `code-reviewer` | sonnet | diff'i kalite/güvenlik/kural açısından inceler |
+| `ceran-core` | `commit-scribe` | sonnet | Conventional Commit mesajı yazar |
+| `ceran-core` | `doc-writer` | sonnet | README/doc/yorum yazar — Türkçe, mermaid'li |
+| `ceran-ai-team` | `software-architect` · `design-specialist` | opus | mimari spec + iskelet dalgası · tasarım spec'i |
+| `ceran-ai-team` | `senior-developer` · `test-engineer` | sonnet | iş paketi gövdesi · vaka matrisi + kapı |
+| `ceran-learning-vault` | `note-validator` · `cross-reference-builder` | sonnet | kasa sayfası doğrulama · wikilink bütünlüğü |
+
+Kaynak: `claude-foundation/plugins/<ad>/agents/`. `ai-team` yalnız manifestte açık beyanla gelir
+(`profiles: [<stack>, ai-team]` — DECISIONS#0040); `learning-vault` profiliyle gelir.
+
 ## Frontmatter standardı
 
 ```markdown
@@ -16,18 +33,8 @@ model: sonnet                  # orkestrasyon: opus | kod/doc: sonnet
 ---
 ```
 
-## Mevcut agents
-
-| Agent | Model | Görev |
-|-------|-------|-------|
-| [`commit-scribe`](commit-scribe.md) | sonnet | Conventional Commit mesajı yazar |
-| [`code-reviewer`](code-reviewer.md) | sonnet | diff'i kalite/güvenlik/kural açısından inceler |
-| [`doc-writer`](doc-writer.md) | sonnet | README/doc/yorum yazar — Türkçe, mermaid'li |
-
-> **Paralel geliştirme ekibi** (`software-architect` · `senior-developer` · `design-specialist` ·
-> `test-engineer`) çekirdek kitte **değil**, paylaşılan `ai-team` overlay'indedir
-> (`claude-foundation/profiles/ai-team/README.md`). Ekibi kullanacak proje `.ceran/ecosystem.yaml`
-> içinde `ai-team`'i açıkça beyan eder — DECISIONS#0040.
+Proje agent'ı adı `<alan>-<rol>` biçiminde olsun (`content-strategist`, `printer-profile-doctor`);
+plugin agent'larıyla aynı adı verme — aynı ad iki yerde tanımlıysa hangisinin çalıştığı okunmaz.
 
 ## Model politikası
 
@@ -39,24 +46,12 @@ model: sonnet                  # orkestrasyon: opus | kod/doc: sonnet
 | `sonnet` | kod yazımı, test, review, doc (**varsayılan**) |
 | ~~`haiku`~~ | **hiçbir yerde** — "basit iş" istisnası yok |
 
-Model **alias** ile yazılır (`opus` · `sonnet` · `inherit`); tam kimlik sabitlenmez. Eski nesil kimlikler
-(`claude-3*`, `claude-opus-4*`, `claude-sonnet-4*`) `model-guard` ve `check-models` tarafından reddedilir
-(DECISIONS#0043) — sabitlenen kimlik model değişince sessizce eskir, alias merkezden ilerler.
+Model **alias** ile yazılır (`opus` · `sonnet` · `inherit`); tam kimlik sabitlenmez. Zorlama K0/K1
+`ceran-hooks model-guard` **allowlist**'idir (`policy/models.yaml`, DECISIONS#0044): tanınmayan değer
+geçmez, eski nesil kimlikler (`claude-3*`, `claude-opus-4*`, `claude-sonnet-4*`) reddedilir;
+`check-models.sh` aynı politikayı CI'da statik tarar.
 
 **Neden:** maliyet **modeli küçülterek** değil **bağlamı küçülterek** düşürülür. Bağlamı dar tutan
-tasarım (bkz. `profiles/ai-team/`) hem daha ucuzdur hem de muhakemeyi feda etmez. "Mekanik" görünen
+tasarım (bkz. `ceran-ai-team` plugin'i) hem daha ucuzdur hem de muhakemeyi feda etmez. "Mekanik" görünen
 bir adım da kural ihlal edebilir — silinen bir test, susturulan bir lint, sızdırılan bir sır — ve
 ucuz model bunu sessizce kaçırır. Sessiz ihlal, tasarruf ettiği token'dan pahalıdır.
-
-**Kapsam:** agent frontmatter'ı · skill frontmatter'ı · `settings*.json` · `Agent`/`Task` çağrısındaki
-`model` parametresi · CLI `--model`.
-
-**Zorlama** (beyan değil, çalıştırılabilir):
-
-| Katman | Ne yapar |
-|--------|----------|
-| `ceran-hooks model-guard` (K0 managed / K1 `~/.claude`, `claude-foundation/ceran-hooks`) | Oturum içinde `Agent`/`Task` çağrısını ve korunan dosyalara yazmayı **engeller** (exit 2) — **allowlist**: `policy/models.yaml`; projeden kaldırılamaz |
-| [`../scripts/check-models.sh`](../scripts/check-models.sh) | Depoyu tarar; dosya nereden gelirse gelsin (başka makine, merge, elle düzenleme) kapıyı kapatır — CI adımı |
-
-Allowlist: yalnız `opus`, `sonnet`, `inherit` ve kanonik `claude-{opus,sonnet}-5` (`[1m]`/tarih eki biçim
-varyantı) geçer; başka her değer engellenir (DECISIONS#0044). Gövde metninde geçen "haiku" kelimesi bulgu değildir — yalnız `model:` **beyanı** sayılır.

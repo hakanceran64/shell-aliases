@@ -39,9 +39,9 @@ Tüm diyagramlar **mermaid** ile yazılır; ASCII/`art` diyagram yasak. Render e
 
 ## ADR süreci
 
-Mimari kararlar `adr` skill'i ile kaydedilir; numara atlanmaz, eski ADR silinmez (Superseded).
+Mimari kararlar `/ceran-core:adr` skill'i ile kaydedilir; numara atlanmaz, eski ADR silinmez (Superseded).
 
 ## İlgili
 
 - Tam set: `sources/Home-SYNC/.claude/` (skills: `adr`, `check-mermaid`, `doc-audit`; hook: `validate-no-code.sh`).
-- Çekirdek: [adr skill](../skills/adr/SKILL.md)
+- Çekirdek: `/ceran-core:adr` skill'i (`ceran-core` plugin'i, DECISIONS#0046)

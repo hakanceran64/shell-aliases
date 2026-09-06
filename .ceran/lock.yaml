@@ -1,6 +1,6 @@
 # ÜRETİLEN — elle düzenleme. `dev eco sync` yazar.
 # Beyan .ceran/ecosystem.yaml'da; bu dosya GERÇEKTE ne kurulu onu söyler.
-generated: 2026-09-06T04:46:07Z
+generated: 2026-09-06T05:35:01Z
 installed:
-  ai-foundation: { mode: vendor, version: v1.1.4, source_sha: 7c9da3c, digest: 822658572c0b2405, files: 29, profiles: docs-only }
-  wiki: { mode: link, path: /Users/ceran/Backup/GitHub/hakanceran64/core/devkit-wiki, sha: 80fe7e0 }
+  ai-foundation: { mode: vendor, version: v1.1.4, source_sha: d2dc1f5, digest: e2f25fccefd428c4, files: 13, profiles: docs-only, plugins: "ceran-core@1.0.0,ceran-pulse@1.0.0" }
+  wiki: { mode: link, path: /Users/ceran/Backup/GitHub/hakanceran64/core/devkit-wiki, sha: 88c20c9 }
