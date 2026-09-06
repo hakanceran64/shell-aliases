@@ -41,4 +41,4 @@ SemVer: yalnız `fix` → PATCH · `feat` → MINOR · `BREAKING CHANGE` → MAJ
 
 ## İlgili
 
-- [03-commit.md](../../rules/03-commit.md)
+- `~/.claude/rules/ceran/commit.md`

@@ -4,7 +4,7 @@
 # Kullanım: bash .claude/scripts/check-models.sh [kök]
 # Exit: 0 = temiz · 1 = yasak model bulundu
 #
-# Hook (pre-tool-use/model-guard.sh) yalnız BU oturumdaki yazmayı engeller. Bu script
+# K0/K1 hook'u (`ceran-hooks model-guard`, allowlist) yalnız BU oturumdaki yazmayı engeller. Bu script
 # dosya nereden gelirse gelsin (başka makine, merge, elle düzenleme) kapıyı kapatır;
 # CI adımı olarak koşar. İkisi aynı kuralın iki yüzeyidir.
 set -uo pipefail

@@ -1,17 +1,30 @@
-# Hooks — kanonik set
+# Hooks — proje katmanı (K3)
 
-Olay-bazlı, **proje-bağımsız** hook'lar. Hepsi bağımsız `.sh` dosyası (test edilebilir, yeniden
-kullanılabilir). Bağlama `../settings.json` içindedir.
+Olay-bazlı, **proje bağlamı gerektiren** hook'lar. Bağlama `../settings.json` içindedir.
 
 | Olay | Hook | Görev |
 |------|------|-------|
-| SessionStart | `session-start/show-context.sh` | proje · branch · kirli dosya · mevcut .claude bölümleri |
-| UserPromptSubmit | `user-prompt-submit/inject-context.sh` | her prompt'a güncel proje bağlamı (JSON) |
-| PreToolUse(Bash) | `pre-tool-use/bash-guard.sh` | yıkıcı komutları engelle (exit 2) |
-| PreToolUse(Task\|Agent\|Edit\|Write) | `pre-tool-use/model-guard.sh` | **yasak modeli (haiku · eski nesil tam kimlik) engelle** — çağrı parametresinde ve agent/skill/settings yazımında (exit 2) |
+| SessionStart | `session-start/pulse-resume.sh` | oturumu NodeFlow'da açar, "nerede kalmıştın" (ceran-pulse) |
 | PostToolUse(Edit\|Write) | `post-tool-use/claude-config-watcher.sh` | **`.claude`/`CLAUDE.md` değişikliğini bildir + changelog + foundation sync sinyali** |
 | PostToolUse(Edit\|Write) | `post-tool-use/format-lint.sh` | **düzenlenen dosyayı formatla + lint'le; bulgu varsa exit 2** |
-| Stop | `stop/wrap-up.sh` | commit edilmemiş dosya özeti (async) |
+| Stop | `stop/pulse-record.sh` | oturumu kapatır: süre + commit'ler (ceran-pulse) |
+
+## Kitten çıkanlar — K0/K1'de tek nüsha (DECISIONS#0044)
+
+`bash-guard` · `model-guard` · `show-context` · `inject-context` · `wrap-up` 2026-09-06'da kitten
+kaldırıldı (`kit/tombstones.yaml`). Karşılıkları `claude-foundation/ceran-hooks` Go binary'sinde
+(`~/.ceran/bin/ceran-hooks`), kullanıcı katmanında (`~/.claude/settings.json`, `dev eco home install`)
+ve managed katmanda (`/Library/Application Support/ClaudeCode/managed-settings.json`) koşar:
+
+| Eski kit hook'u | Yeni | Fark |
+|-----------------|------|------|
+| `pre-tool-use/bash-guard.sh` | `ceran-hooks bash-guard` | aynı 17 desen |
+| `pre-tool-use/model-guard.sh` | `ceran-hooks model-guard` | **allowlist** (`policy/models.yaml`): yalnız `opus` · `sonnet` · `inherit` |
+| `session-start/show-context.sh` · `user-prompt-submit/inject-context.sh` · `stop/wrap-up.sh` | `ceran-hooks session-context` | tek alt komut, olayı JSON'dan seçer |
+
+Proje bu guard'ları **kaldıramaz**: kayıtları projenin `settings.json`'ında değil.
+Üye repoda kopyaları kaldıysa `dev eco sync` dokunulmamış olanı siler; özelleştirilmişi
+`lingering` olarak raporlar.
 
 ## claude-config-watcher (governance)
 
@@ -36,25 +49,9 @@ arşivi tazeler. Foundation konumu `CLAUDE_FOUNDATION_DIR` ile ayarlanır (varsa
 checkout; submodule kopyası hedef gösterilirse hook uyarır ve sinyali atlar).
 Bkz. `claude-foundation/docs/GOVERNANCE.md`.
 
-## model-guard (model politikası)
-
-`agents/README.md` → **Model politikası**'nın çalıştırılabilir karşılığı (DECISIONS#0040): yalnız
-`opus` ve `sonnet`; `haiku` yasak. İki yüzeyi birden kapatır:
-
-1. **Çalışma anı** — bir subagent `model: haiku` ile çağrılırsa çağrı engellenir.
-2. **Yapılandırma** — `.claude/agents/*.md`, `skills/**/SKILL.md` ve `settings*.json` dosyalarına
-   haiku **yazılması** engellenir; dosya diske hiç düşmez.
-
-Yalnız `haiku` engellenir; tanınmayan değer işi durdurmaz (`inherit`, `claude-opus-5`, `sonnet[1m]`
-serbest). `.md` dosyalarında yalnız `model:` **beyanı** sayılır — gövdede geçen "haiku" kelimesi
-bulgu değildir. Bozuk JSON'da fail-open.
-
-Depo-geneli karşılığı `scripts/check-models.sh` (CI adımı): hook yalnız bu oturumdaki yazmayı
-engeller, script dosya nereden gelirse gelsin kapıyı kapatır.
-
 ## format-lint (kalite kapısı)
 
-`05-kod-kalitesi` ve profil `06-*` kurallarının **çalıştırılabilir** karşılığı. Sözleşme
+`kod-kalitesi` (K1) ve profil `06-*` kurallarının **çalıştırılabilir** karşılığı. Sözleşme
 `.claude/quality.json`:
 
 ```json
@@ -74,6 +71,12 @@ engeller, script dosya nereden gelirse gelsin kapıyı kapatır.
 
 Profil öntanımlıları `profiles/<profil>/.claude/quality.json`'dadır; profilsiz projeler
 `quality.json.example`'ı kopyalar.
+
+## Model politikası (statik yüzey)
+
+`scripts/check-models.sh` (CI adımı, `verify.sh` politika adımı) depoyu tarar; dosya nereden
+gelirse gelsin (başka makine, merge, elle düzenleme) kapıyı kapatır. Oturum içi yüzey K0/K1'deki
+`ceran-hooks model-guard`'dır; ikisi aynı kuralın iki yüzeyidir (`policy/models.yaml`).
 
 ## Notlar
 

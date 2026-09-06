@@ -36,8 +36,8 @@ flowchart TD
 - Başlık imperative, ≤ 72 karakter, sonda nokta yok.
 - Scope kebab-case (`domain`, `application`, `infra`, `ui`, `claude`, `docs`).
 - `BREAKING CHANGE:` footer → MAJOR.
-- AI atfı varsayılan **kapalı** (bkz. [03-commit.md](../rules/03-commit.md)).
+- AI atfı varsayılan **kapalı** (bkz. `~/.claude/rules/ceran/commit.md`).
 
 ## İlgili
 
-- [03-commit.md](../rules/03-commit.md) · [changelog-draft](../skills/changelog-draft/SKILL.md)
+- `~/.claude/rules/ceran/commit.md` · [changelog-draft](../skills/changelog-draft/SKILL.md)

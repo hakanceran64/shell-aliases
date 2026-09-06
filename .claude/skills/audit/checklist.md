@@ -8,7 +8,7 @@ Her eksen `✅ / ⚠️ / ❌` puanlanır; her bulguya `dosya:satır` kanıtı.
 - Modülerlik: tek sorumluluk, döngüsel bağımlılık var mı?
 
 ## 2. Kod Kalitesi
-- `05-kod-kalitesi` anti-pattern'leri: Magic Number, Primitive Obsession, Dead Code, Shotgun Surgery
+- `kod-kalitesi` (K1) anti-pattern'leri: Magic Number, Primitive Obsession, Dead Code, Shotgun Surgery
 - Fonksiyon boyutu/karmaşıklığı, isimlendirme, gereksiz yorum
 - DRY/KISS/YAGNI ihlalleri, kopyalanmış kod blokları
 

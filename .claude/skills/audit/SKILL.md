@@ -50,4 +50,4 @@ Projeyi uçtan uca denetle, `docs/audit/AUDIT-<tarih>.md` raporu üret ve bulgul
 ## İlgili
 
 - [checklist.md](checklist.md) · [report-template.md](report-template.md)
-- Kurallar: [05-kod-kalitesi](../../rules/05-kod-kalitesi.md) · [02-guvenlik](../../rules/02-guvenlik.md)
+- Kurallar: `~/.claude/rules/ceran/kod-kalitesi.md` · `~/.claude/rules/ceran/guvenlik.md`

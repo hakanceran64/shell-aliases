@@ -21,6 +21,6 @@ INPUT="$(cat 2>/dev/null || true)"
 
 PULSE="$(find_pulse)" || exit 0
 # Çıktı stderr'e: SessionStart'ın stdout'u başka amaçlarla yorumlanabilir,
-# bağlam satırları oraya karışmamalı (kit'teki show-context.sh ile aynı desen).
+# bağlam satırları oraya karışmamalı (ceran-hooks session-context ile aynı desen).
 printf '%s' "$INPUT" | "$PULSE" resume >&2 || true
 exit 0

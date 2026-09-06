@@ -104,47 +104,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/session-start/show-context.sh",
-            "timeout": 10
-          },
-          {
-            "type": "command",
             "command": "bash .claude/hooks/session-start/pulse-resume.sh",
             "timeout": 10
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "matcher": ".*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/user-prompt-submit/inject-context.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/pre-tool-use/bash-guard.sh",
-            "timeout": 5
-          }
-        ]
-      },
-      {
-        "matcher": "Task|Agent|Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/pre-tool-use/model-guard.sh",
-            "timeout": 5
           }
         ]
       }
@@ -170,12 +131,6 @@
       {
         "matcher": ".*",
         "hooks": [
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/stop/wrap-up.sh",
-            "timeout": 10,
-            "async": true
-          },
           {
             "type": "command",
             "command": "bash .claude/hooks/stop/pulse-record.sh",

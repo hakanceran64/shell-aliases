@@ -13,7 +13,7 @@ Staged/unstaged diff'i veya verilen dosyaları gözden geçirir. **Kod yazmaz**,
 
 1. **Doğruluk** — mantık hataları, sınır koşulları, null/empty, race, kaynak sızıntısı.
 2. **Güvenlik** — girdi doğrulama, path traversal, secret/credential sızıntısı, injection, dosya izinleri.
-3. **Kurallar** — `.claude/rules/` uyumu (özellikle `05-kod-kalitesi`: SOLID, anti-pattern).
+3. **Kurallar** — `.claude/rules/` uyumu (özellikle `kod-kalitesi` (K1): SOLID, anti-pattern).
 4. **Sadelik/tekrar** — DRY ihlali, gereksiz karmaşıklık (KISS/YAGNI), ölü kod.
 
 ## Yöntem
@@ -35,4 +35,4 @@ Bulgu yoksa bunu açıkça söyle.
 
 ## İlgili
 
-- [05-kod-kalitesi.md](../rules/05-kod-kalitesi.md) · [02-guvenlik.md](../rules/02-guvenlik.md)
+- `~/.claude/rules/ceran/kod-kalitesi.md` · `~/.claude/rules/ceran/guvenlik.md`

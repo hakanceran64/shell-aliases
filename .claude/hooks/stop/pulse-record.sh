@@ -2,7 +2,7 @@
 # pulse-record — oturumu kapatır: süre + o aralıkta düşen commit'ler.
 # Event: Stop | Matcher: *
 #
-# `wrap-up.sh`'ın aksine ASYNC DEĞİL. Bu hook veri YAZAR; async koşup süreç
+# K1 `session-context` Stop kaydının aksine ASYNC DEĞİL. Bu hook veri YAZAR; async koşup süreç
 # kapanışında kesilirse oturum hiç kaydedilmez ve kullanıcı kaybettiğini
 # bilmez. pulse'ın kendi zaman aşımı 2 saniyedir ve ulaşamazsa kuyruğa alır,
 # yani senkron beklemenin üst sınırı zaten kısadır.

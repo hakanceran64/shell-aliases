@@ -31,4 +31,4 @@ Kullanıcının tarif ettiği mimari kararı `adr-template.md` formatında ADR d
 
 ## İlgili
 
-- `adr-template.md` (yanında) · [03-commit.md](../../rules/03-commit.md)
+- `adr-template.md` (yanında) · `~/.claude/rules/ceran/commit.md`

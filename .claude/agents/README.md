@@ -55,8 +55,8 @@ ucuz model bunu sessizce kaçırır. Sessiz ihlal, tasarruf ettiği token'dan pa
 
 | Katman | Ne yapar |
 |--------|----------|
-| [`../hooks/pre-tool-use/model-guard.sh`](../hooks/pre-tool-use/model-guard.sh) | Oturum içinde `Agent`/`Task` çağrısını ve korunan dosyalara yazmayı **engeller** (exit 2) |
+| `ceran-hooks model-guard` (K0 managed / K1 `~/.claude`, `claude-foundation/ceran-hooks`) | Oturum içinde `Agent`/`Task` çağrısını ve korunan dosyalara yazmayı **engeller** (exit 2) — **allowlist**: `policy/models.yaml`; projeden kaldırılamaz |
 | [`../scripts/check-models.sh`](../scripts/check-models.sh) | Depoyu tarar; dosya nereden gelirse gelsin (başka makine, merge, elle düzenleme) kapıyı kapatır — CI adımı |
 
-Yalnız `haiku` engellenir; `opus`, `sonnet`, `inherit`, `claude-opus-5`, `sonnet[1m]` gibi biçimler
-serbesttir. Gövde metninde geçen "haiku" kelimesi bulgu değildir — yalnız `model:` **beyanı** sayılır.
+Allowlist: yalnız `opus`, `sonnet`, `inherit` ve kanonik `claude-{opus,sonnet}-5` (`[1m]`/tarih eki biçim
+varyantı) geçer; başka her değer engellenir (DECISIONS#0044). Gövde metninde geçen "haiku" kelimesi bulgu değildir — yalnız `model:` **beyanı** sayılır.
